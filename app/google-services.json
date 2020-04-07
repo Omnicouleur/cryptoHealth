@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "929255037499",
+    "firebase_url": "https://e-health-7aa99.firebaseio.com",
+    "project_id": "e-health-7aa99",
+    "storage_bucket": "e-health-7aa99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929255037499:android:ee79ba0ebd984410b21a1e",
+        "android_client_info": {
+          "package_name": "com.ahmed.hSafe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929255037499-m5r582c0phoc8anrjdh8b23gn972eq9s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ahmed.hSafe",
+            "certificate_hash": "ec69047f65bf8930f80cdb7b813ceaf789d6e361"
+          }
+        },
+        {
+          "client_id": "929255037499-ih7tk1s4mv2q7hfl4md8n5l3fncb78i3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLNa0tdzPW50zyksEVsZsRAro0UMheXAI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929255037499-ih7tk1s4mv2q7hfl4md8n5l3fncb78i3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scrollFeed"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".EnquiryActivity"
+    tools:showIn="@layout/activity_setup_eth_account"
+    android:background="@drawable/centre_background"
+    android:focusableInTouchMode="true">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/personalDetailsCard"
+        style="@style/centreLocatorCardDesign"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="10dp">
+
+        <LinearLayout
+            android:id="@+id/create_wallet_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:focusableInTouchMode="false"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/welcomeText"
+                style="@style/welcomeText"
+                android:textColor="@color/gradBlue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/welcome_text"/>
+
+            <TextView
+                android:id="@+id/wallet_creation_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="19sp"
+                android:layout_marginTop="20sp"
+                android:textAlignment="center"
+                android:text="@string/wallet_creation_pass_hint"/>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/loginViewsMargin">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPassword"
+                    style="@style/modifiedEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/login_password_hint"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:imeOptions="actionDone"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/create_wallet_btn"
+                android:layout_width="150dp"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/centre_button"
+                android:text="@string/create_wallet_btn"
+                android:textColor="@color/whiteTextColor" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/display_wallet_mnemonic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:focusableInTouchMode="false"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/walletCreatedText"
+                style="@style/welcomeText"
+                android:textColor="@color/gradBlue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/secret_backup_phrase"/>
+
+            <TextView
+                android:id="@+id/wallet_mnemonic_hint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="19sp"
+                android:layout_marginTop="20sp"
+                android:textAlignment="textStart"
+                android:text="Your secret backup phrase makes it easy to back up and restore your wallet.
+\n\nWARNING: Never disclose your backup phrase. Anyone with this phrase can access all your data.\n"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mnemonic_phrase"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:background="@drawable/address_bg"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="situate intact pluck ribbon october expect cable social neutral surprise deposit injury"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/copy_mnemonic"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/centre_button"
+                    android:text="COPY"
+                    android:textColor="@color/whiteTextColor" />
+                <Button
+                    android:id="@+id/next_deploy_contract"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/centre_button"
+                    android:text="NEXT"
+                    android:textColor="@color/whiteTextColor" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/contract_deploy_success"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:focusableInTouchMode="false"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:padding="20dp">
+            <TextView
+                android:id="@+id/contract_deploy_success_header"
+                style="@style/welcomeText"
+                android:textColor="@color/gradBlue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Contract deployed successfuly"/>
+            <TextView
+                android:id="@+id/contract_deploy_success_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="19sp"
+                android:layout_marginTop="20sp"
+                android:textAlignment="center"
+                android:text="You\'re All Set !\nYou are one step away from starting your experience with us, we hope it'll be a pleasant.\n Your contract has been deployed on this address :"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/contract_deploy_success_address"
+                android:text="hellooo"
+                android:textSize="13sp"
+                android:textAlignment="center"
+                android:background="@drawable/address_bg"
+                android:layout_gravity="center"
+                android:gravity="center"                />
+
+            <Button
+                android:id="@+id/contract_deploy_success_btn"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/centre_button"
+                android:text="Enjoy"
+                android:textColor="@color/whiteTextColor" />
+        </LinearLayout>
+        <ProgressBar android:id="@+id/loading_spinner"
+            style="?android:progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+    </com.google.android.material.card.MaterialCardView>
+</androidx.core.widget.NestedScrollView>

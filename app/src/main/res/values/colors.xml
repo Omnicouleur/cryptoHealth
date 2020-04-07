@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <!--colors for modern ui-->
+    <color name="whiteTextColor">#fff</color>
+    <color name="primaryTextColor">#2661FA</color>
+    <color name="loginBkColor">#f0f0f0</color>
+
+    <!--colros for card-->
+    <color name="whiteCardColor">#fff</color>
+
+    <!--colors for PROFILE-->
+    <color name="profilePrimaryDark">#FF3B30</color>
+    <color name="profileAccentColor">#F7F7F7</color>
+    <color name="profileBackground">#fff</color>
+    <color name="blackTextColor">#000</color>
+    <color name="profileEditTextColor">#707070</color>
+
+    <!-- Radio Button -->
+    <color name="white">#FFF</color>
+    <color name="detail_pink">#0D93C2</color>
+    <color name="detail_blue">#58B2FE</color>
+
+    <color name="title">#3F4A58</color>
+    <color name="gradBlue">
+        #0D93C2
+    </color>
+
+    <color name="unselected_selectable_text_bg">#EAEAEB</color>
+
+
+</resources>

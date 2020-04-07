@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">cryptoHealth</string>
+    <string name="register">REGISTER</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_confirm_password_hint">Confirm Password</string>
+    <string name="signup_login_hint">Already have an account? Sign In</string>
+    <string name="login_signup_hint">Don\'t have an account? Sign Up</string>
+    <string name="login_name_hint">Name</string>
+    <string name="login_mobile_number_hint">Mobile Number</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Enquiry-->
+    <string name="gender_hint">Gender</string>
+    <string name="age_hint">Age</string>
+    <string name="submit_btn_hint">Submit</string>
+    <string name="radio_btn_male">Male</string>
+    <string name="radio_btn_female">Female</string>
+    <string name="city_btn_hint">Choose your city</string>
+    <string name="create_wallet_btn">Create Wallet</string>
+
+    <string-array name="country_arrays">
+        <item>Malaysia</item>
+        <item>United States</item>
+        <item>Indonesia</item>
+        <item>France</item>
+        <item>Italy</item>
+        <item>Singapore</item>
+        <item>New Zealand</item>
+        <item>India</item>
+    </string-array>
+    <string name="country_prompt">Choose a city</string>
+    <string name="welcome_text">Welcome Ahmed, \nWe\'re happy you joined us !</string>
+    <string name="wallet_creation_pass_hint">Now we need to create a wallet for you, which will allow the deployment of your smart contract.\n\nChoose your wallet\'s password</string>
+    <string name="wallet_successfuly_created">Wallet successfuly created !</string>
+    <string name="secret_backup_phrase">Secret Backup Phrase</string>
+    <string name="public_adress_hint">Your public address :</string>
+</resources>
