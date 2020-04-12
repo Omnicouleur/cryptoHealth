@@ -60,7 +60,7 @@ contract eHealth  {
     }
     /* create a new staff member (doctor or coach)  */
     function createStaff(string memory _greeting) public {
-        require (msg.sender == owner,"Staff members can only created by the admin");
+        require (msg.sender == owner,"Staff members can only be created by the admin");
         greeting = _greeting;
     }
      /* update a staff member (doctor or coach)  */

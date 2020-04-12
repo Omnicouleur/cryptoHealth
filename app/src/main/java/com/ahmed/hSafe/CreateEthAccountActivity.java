@@ -103,7 +103,14 @@ public class CreateEthAccountActivity extends AppCompatActivity {
 web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
 * */
     }
-    //TODO Add broadcasters
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+        unregisterReceiver(contractReceiver);
+        unregisterReceiver(cryptoAccountReceiver);
+    }
     private final BroadcastReceiver cryptoAccountReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -166,8 +173,12 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
     }
     public  void goToDeployedContractView(){
         loadingView.setVisibility(View.GONE);
-
         contractDeploySuccessLayout.setVisibility(View.VISIBLE);
+        goToHomeActivity();
+    }
+    public void goToHomeActivity(){
+        Intent intent = new Intent(CreateEthAccountActivity.this, HomeActivity.class);//TODO Change this to GattMainActivity
+        startActivity(intent);
     }
 
 }

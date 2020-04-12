@@ -57,6 +57,7 @@ public class InitializeEthAccountTask extends AsyncTask<String, Void, Map<String
             Web3j web3 = Web3j.build(new InfuraHttpService(url));
             //Credentials adminCreds = Credentials.create("21E20BD99C3EA66B11F03087501FAE73935C17C6A616B6F5F5386406541C2EC0");
             Credentials adminCreds = Credentials.create("f9319fe162c31947c0ca8fd649a536b7ca311b5f210afdc48b62fd7d18ce53e4");
+            Credentials adminCredsGanache = Credentials.create("0x3013130b6a5f19d93abc67cad9c35e5ace338d1a06e2028da989fceae85af10b");
 
             resMap = new HashMap<String, String>();
             // Create wallet and send funds to it
@@ -76,8 +77,9 @@ public class InitializeEthAccountTask extends AsyncTask<String, Void, Map<String
 
                 resMap.put("address",walletCredentials.getAddress());
                 // Send Funds to the new wallet since funds are needed to deploy the contract and use it's methods
-                String transHash = Wallet.sendTransaction(web3,adminCreds,walletCredentials.getAddress());
-                Log.d("Hello","Transaction Hash : "+ transHash);
+                String transHashGanache = Wallet.sendTransactionGanache(adminCredsGanache,walletCredentials.getAddress());
+                //String transHash = Wallet.sendTransaction(adminCreds,walletCredentials.getAddress()); //INFURA
+                Log.d("Hello","Transaction Hash : "+ transHashGanache);
                 Intent intent = new Intent("cryptoAccountReceiver");
                 intent.putExtra("mnemonic", resMap.get("mnemonic"));
                 intent.putExtra("address", resMap.get("address"));

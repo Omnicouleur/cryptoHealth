@@ -11,4 +11,7 @@ public class CryptoAccount {
         this.walletFilePath = walletFilePath;
         this.contractAddress = contractAddress;
     }
+    public CryptoAccount(){
+
+    }
 }

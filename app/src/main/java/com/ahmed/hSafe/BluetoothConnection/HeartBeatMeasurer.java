@@ -4,6 +4,8 @@ package com.ahmed.hSafe.BluetoothConnection;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import java.util.UUID;
@@ -39,13 +41,16 @@ public class HeartBeatMeasurer  {
      * discovered using the Bluetooth device discovery or BLE scan process.
      */
     private BluetoothGatt btGatt;
+    private Context context;
 
     /**
      * keeps current heart beat value taken from miband device
      */
     private String heartRateValue = "0";
 
-    HeartBeatMeasurer( ) {
+    HeartBeatMeasurer(Context context) {
+        this.context = context;
+
     }
 
     public void updateHrChars(BluetoothGatt gatt){
@@ -69,6 +74,11 @@ public class HeartBeatMeasurer  {
     public void handleHeartRateData(final BluetoothGattCharacteristic characteristic) {
         byte currentHrValue = characteristic.getValue()[1];
         heartRateValue = String.valueOf(currentHrValue);
+
+        Intent intent = new Intent("heartRateReceiver");
+        intent.putExtra("heartRate", heartRateValue);
+        context.sendBroadcast(intent);
+
         Log.d("MiBand3","(Handle) Heart Rate Value = "+ heartRateValue);
     }
 
@@ -78,7 +88,6 @@ public class HeartBeatMeasurer  {
     public void startHrCalculation() {
         sensorChar.setValue(new byte[]{0x01, 0x03, 0x19});
         btGatt.writeCharacteristic(sensorChar);
-
         //successCallback.invoke(null, heartRateValue);
     }
 
@@ -94,6 +103,11 @@ public class HeartBeatMeasurer  {
         if(Integer.valueOf(heartRateValue).equals(Integer.valueOf(currentHeartBeat))||true){
             hrCtrlChar.setValue(new byte[]{0x16});
             btGatt.writeCharacteristic(hrCtrlChar);
+
+            Intent intent = new Intent("heartRateReceiver");
+            intent.putExtra("heartRate", heartRateValue);
+            context.sendBroadcast(intent);
+
             Log.d("MiBand3","Heart Rate Value = "+ heartRateValue);
         }
         return heartRateValue;

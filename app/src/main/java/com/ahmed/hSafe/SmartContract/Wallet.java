@@ -8,6 +8,8 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.http.HttpService;
+import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.tx.ChainId;
 import org.web3j.tx.Contract;
 import org.web3j.tx.RawTransactionManager;
@@ -30,6 +32,12 @@ public class Wallet {
     /* Load the new wallet file once it is created
      *  Replace the File path with newly created wallet file path
      */
+    public static Web3j web3j_ganache = Web3j.build(new HttpService("http://10.0.2.2:8545"));
+    // endpoint url provided by infura
+    public static String url = "https://rinkeby.infura.io/v3/175c599b149742d8a917fd6962e81788";
+    // web3j infura instance
+    public static Web3j web3 = Web3j.build(new InfuraHttpService(url));
+
     public static Credentials loadCredentials(String password, String path) throws Exception {
         Credentials credentials = WalletUtils.loadCredentials(password, path);
         Log.d("Hello", "Credentials loaded, Private KEY : " + credentials.getEcKeyPair().getPrivateKey().toString(16));
@@ -42,18 +50,33 @@ public class Wallet {
         return bip39Wallet;
     }
 
-    public static String sendTransaction(Web3j web3, Credentials credentials, String toAdress) throws Exception {
+    public static String sendTransaction(Credentials credentials, String toAdress) throws Exception {
         TransactionReceipt transferReceipt = Transfer.sendFunds(web3, credentials,
                 toAdress,  // you can put any address here
                 BigDecimal.valueOf(25), Convert.Unit.FINNEY)
                 .send();
         return transferReceipt.getTransactionHash();
     }
-    public static EHealth deployContract(Web3j web3,Credentials walletCredentials) throws Exception {
+    public static EHealth deployContract(Credentials walletCredentials) throws Exception {
         TransactionManager transactionManager = new RawTransactionManager(
                 web3, walletCredentials, ChainId.RINKEBY);
         Log.d("Hello","Account's Address : "+ walletCredentials.getAddress() );
         EHealth contract = EHealth.deploy(web3,transactionManager,gasPrice, gasLimit).send();
+        Log.d("Hello","Contract deployed successfuly \nContract's Address : "+contract.getContractAddress());
+        return contract;
+    }
+    public static String sendTransactionGanache(Credentials credentials, String toAdress) throws Exception {
+        TransactionReceipt transferReceipt = Transfer.sendFunds(web3j_ganache, credentials,
+                toAdress,  // you can put any address here
+                BigDecimal.valueOf(25), Convert.Unit.FINNEY)
+                .send();
+        return transferReceipt.getTransactionHash();
+    }
+    public static EHealth deployContractGanache(Credentials walletCredentials) throws Exception {
+        TransactionManager transactionManager = new RawTransactionManager(
+                web3j_ganache, walletCredentials, ChainId.RINKEBY);
+        Log.d("Hello","Account's Address : "+ walletCredentials.getAddress() );
+        EHealth contract = EHealth.deploy(web3j_ganache,transactionManager,gasPrice, gasLimit).send();
         Log.d("Hello","Contract deployed successfuly \nContract's Address : "+contract.getContractAddress());
         return contract;
     }

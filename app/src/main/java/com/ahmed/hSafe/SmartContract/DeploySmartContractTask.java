@@ -24,9 +24,8 @@ package com.ahmed.hSafe.SmartContract;
 
 public class DeploySmartContractTask extends AsyncTask<String, Void, EHealth> {
 
-    private Exception exception;
     private EHealth eHealthContract;
-
+    private EHealth eHealthContractGanache;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -57,18 +56,18 @@ public class DeploySmartContractTask extends AsyncTask<String, Void, EHealth> {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        // endpoint url provided by infura
-        String url = "https://rinkeby.infura.io/v3/175c599b149742d8a917fd6962e81788";
-        // web3j infura instance
-        Web3j web3 = Web3j.build(new InfuraHttpService(url));
 
         // Deploy the contract
         try {
-            eHealthContract = Wallet.deployContract(web3,walletCredentials);
+            eHealthContractGanache = Wallet.deployContractGanache(walletCredentials);
+            //eHealthContract = Wallet.deployContract(walletCredentials); //INFURA
+            eHealthContract = eHealthContractGanache; //TODO Change this !!
+            Log.d("Hello","Ganache : " + eHealthContractGanache.getContractAddress());
+
             // Store user's address + wallet file path in DB
             FirebaseUser user = mAuth.getCurrentUser();
             CryptoAccount cryptoAccount = new CryptoAccount(walletCredentials.getAddress(),filePath,eHealthContract.getContractAddress());
-            mDatabase.child("cyptoAccounts").child(user.getUid()).setValue(cryptoAccount).addOnCompleteListener(task -> {
+            mDatabase.child("cryptoAccounts").child(user.getUid()).setValue(cryptoAccount).addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
                     Intent intent = new Intent("contractReceiver");
                     intent.putExtra("contractAddress", eHealthContract.getContractAddress());

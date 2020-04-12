@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -35,11 +37,12 @@ public class GattCallbackHandler extends BluetoothGattCallback {
     private BluetoothGattCharacteristic hrCtrlChar;
     private BluetoothGattDescriptor hrDescChar;
     private BluetoothGattCharacteristic batteryChar;
-
+    private Context context;
     private HeartBeatMeasurer heartBeatMeasurer;
 
-    public GattCallbackHandler(HeartBeatMeasurer heartBeatMeasurer){
+    public GattCallbackHandler(Context applicationContext, HeartBeatMeasurer heartBeatMeasurer){
         this.heartBeatMeasurer = heartBeatMeasurer;
+        this.context = applicationContext;
     }
 
     @Override
@@ -112,11 +115,9 @@ public class GattCallbackHandler extends BluetoothGattCallback {
                     }
                     case "[16, 3, 1]":{
                         Log.d("INFO", "Authentication has been passed successfully"); // 7
-//                        ModuleStorage moduleStorage = getModuleStorage();
-//                        heartBeatMeasurer = moduleStorage.getHeartBeatMeasurerPackage().getHeartBeatMeasurer();
+
                         heartBeatMeasurer.updateHrChars(gatt);
-//                        infoReceiver = moduleStorage.getInfoPackage().getInfoReceiver();
-//                        infoReceiver.updateInfoChars(gatt);
+
                         BluetoothGattService service1 = gatt.getService(UUID.fromString(SERVICE1));
                         BluetoothGattCharacteristic stepsChar = service1.getCharacteristic(UUID.fromString(CHAR_STEPS));
                         gatt.readCharacteristic(stepsChar);
@@ -147,10 +148,16 @@ public class GattCallbackHandler extends BluetoothGattCallback {
                 long decimalstep = Long.parseLong(steps,16);
                 long decimalCalories = Long.parseLong(calories,16);
                 long decimalDistance = Long.parseLong(distance,16);
+
+                Intent intent = new Intent("stepsReceiver");
+                intent.putExtra("steps", Long.toString(decimalstep));
+                intent.putExtra("calories", Long.toString(decimalCalories));
+                intent.putExtra("distance", Long.toString(decimalDistance));
+                context.sendBroadcast(intent);
+
                 Log.d("MiBand3","STEPS = "+decimalstep);
                 Log.d("MiBand3","Calories = "+decimalCalories);
                 Log.d("MiBand3","Distance = "+decimalDistance);
-                //infoReceiver.handleInfoData(characteristic.getValue());
                 gatt.readCharacteristic(batteryChar);
                 break;
             }

@@ -15,7 +15,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <activity android:name="com.ahmed.hSafe.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -40,7 +41,8 @@
         </activity>
         <activity
             android:name="com.ahmed.hSafe.BluetoothConnection.GattMainActivity"
-            android:label="GATT"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Home"
             >
         </activity>
         <activity
@@ -53,6 +55,12 @@
             android:name="com.ahmed.hSafe.EnquiryActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="Enquiry"
+            >
+        </activity>
+        <activity
+            android:name="com.ahmed.hSafe.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Home"
             >
         </activity>
     </application>
