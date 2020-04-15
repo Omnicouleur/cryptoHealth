@@ -8,19 +8,7 @@ import androidx.annotation.RequiresApi;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.core.methods.response.EthGasPrice;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.http.HttpService;
 import org.web3j.protocol.infura.InfuraHttpService;
-import org.web3j.tx.ChainId;
-import org.web3j.tx.Contract;
-import org.web3j.tx.RawTransactionManager;
-import org.web3j.tx.TransactionManager;
-import org.web3j.tx.gas.ContractGasProvider;
-import org.web3j.tx.gas.DefaultGasProvider;
-import org.web3j.tx.gas.StaticGasProvider;
 
 import java.math.BigInteger;
 import java.util.concurrent.Future;
@@ -54,14 +42,14 @@ public class WriteToContract extends AsyncTask<String, Void, EHealth> {
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    protected void writeToContract() throws Exception {
+    private void writeToContract() throws Exception {
 
         // endpoint url provided by infura
         String url = "https://rinkeby.infura.io/v3/175c599b149742d8a917fd6962e81788";
         // web3j infura instance
         Web3j web3 = Web3j.build(new InfuraHttpService(url));
 
-        Web3j web3j_ganache = Web3j.build(new HttpService("http://10.0.2.2:8545"));
+        //Web3j web3j_ganache = Web3j.build(new HttpService("http://10.0.2.2:8545"));
         // gas limit
         BigInteger gasLimit = BigInteger.valueOf(5_300_000);
         // gas price
@@ -73,40 +61,33 @@ public class WriteToContract extends AsyncTask<String, Void, EHealth> {
 
         String contractAddressGanache = "0x5dd1e9781cc5bee88e3753faf52f706250724812";
         Credentials credentialsGanache = Credentials.create("17fcb7e2dcca0e752c8e3c77df0562e396056e4ee73a8e7b18744ee114327c65");
-
+        Credentials credentialsRopsten = Credentials.create("0x21E20BD99C3EA66B11F03087501FAE73935C17C6A616B6F5F5386406541C2EC0");
+        String ncadress = "0x10ceb619749cac91ae6afda5ab6e7a30d2b587a7";
         Log.d("WriteContract","Hello2 Creds : "+credentials.getAddress());
-        TransactionManager transactionManager = new RawTransactionManager(
-                web3j_ganache, credentials, ChainId.RINKEBY);
-        ContractGasProvider contractGasProvider = new StaticGasProvider(gasPrice,gasLimit);
-
-        eHealthContract = EHealth.load(contractAddressGanache, web3j_ganache, credentialsGanache,gasPrice,gasLimit);
-
+        eHealthContract = Wallet.loadContract("ropsten", credentialsRopsten, ncadress);
+        Wallet.createPatient(eHealthContract);
         Log.d("WriteContract","Hello C: "+eHealthContract.getContractAddress());
         readContract(eHealthContract);
-        // write to contract
-//        TransactionReceipt transactionReceipt = eHealthContract.createPatient("Ahmed",new BigInteger(String.valueOf(20)),new BigInteger(String.valueOf(1))).send();
-//        Log.d("WriteContract","Transaction Hash : "+transactionReceipt.toString());
+
 
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    protected String readContract (EHealth greeter) {
+    private String readContract(EHealth greeter) {
 
         try {
             Future<String> greeting = greeter.getPatientName().sendAsync();
             String convertToString = "";
             convertToString += " || " +  greeting.get();
-            Log.d("Hello", "Read from contract :" + convertToString);
+            Log.d("WriteContract", "Read from contract :" + convertToString);
             return convertToString;
         }
         catch (Exception e){
-            Log.d("Hello", "Exception 2 :" + e.getMessage());
-        }
-        finally {
-            return "no";
+            Log.d("WriteContract", "Exception read Contract :" + e.getMessage());
         }
 
+        return "Error while reading";
     }
 
 }

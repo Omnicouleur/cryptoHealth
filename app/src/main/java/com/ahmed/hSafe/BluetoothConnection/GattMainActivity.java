@@ -17,16 +17,15 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ahmed.hSafe.LoginActivity;
 import com.ahmed.hSafe.R;
 import com.ahmed.hSafe.SmartContract.WriteToContract;
-
-import org.w3c.dom.Text;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class GattMainActivity extends AppCompatActivity {
 
@@ -44,7 +43,7 @@ public class GattMainActivity extends AppCompatActivity {
     ImageView pauseMeasureHeartRateBtn;
     ImageView measuringHeartRateIcon;
     Context context;
-
+    Button logoutBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -79,12 +78,17 @@ public class GattMainActivity extends AppCompatActivity {
          if(bluetoothScanner != null){
              bluetoothScanner.startScan(deviceScanCallback);
          }
-
          final int DISCOVERY_TIME_DELAY_IN_MS = 120000;
-         new Handler().postDelayed(() -> {
-             bluetoothAdapter.getBluetoothLeScanner().stopScan(deviceScanCallback);
-             }, DISCOVERY_TIME_DELAY_IN_MS);
-        Animation animation = AnimationUtils.loadAnimation(context,R.anim.heart_anim);
+        new Handler().postDelayed(() -> bluetoothAdapter.getBluetoothLeScanner().stopScan(deviceScanCallback), DISCOVERY_TIME_DELAY_IN_MS);
+
+        logoutBtn = findViewById(R.id.logoutButton);
+        logoutBtn.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(GattMainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        });
+
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.heart_anim);
         measuringHeartRateIcon = findViewById(R.id.measuringHeartRateIcon);
 
         stepsTextView = findViewById(R.id.stepsTextView);
@@ -155,7 +159,7 @@ public class GattMainActivity extends AppCompatActivity {
         Context mainContext = this.getApplicationContext();
 //        bluetoothDevice.createBond();
         bluetoothGatt = bluetoothDevice.connectGatt(mainContext, true, gattCallbackHandler);
-        if (bluetoothGatt.getDevice().getBondState() == bluetoothDevice.BOND_BONDED) {
+        if (bluetoothGatt.getDevice().getBondState() == BluetoothDevice.BOND_BONDED) {
             Log.d("Hello", "Bonded");
             bluetoothGatt.discoverServices();
         }

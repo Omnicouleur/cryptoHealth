@@ -20,6 +20,7 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="10dp">
 
+        <!-- Create Wallet UI -->
         <LinearLayout
             android:id="@+id/create_wallet_card"
             android:layout_width="match_parent"
@@ -77,15 +78,15 @@
                 android:text="@string/create_wallet_btn"
                 android:textColor="@color/whiteTextColor" />
         </LinearLayout>
-
+        <!-- Wallet Created UI -->
         <LinearLayout
             android:id="@+id/display_wallet_mnemonic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:visibility="gone"
             android:focusableInTouchMode="false"
             android:orientation="vertical"
-            android:visibility="gone"
             android:padding="20dp">
 
             <TextView
@@ -120,20 +121,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:gravity="center">
                 <Button
                     android:id="@+id/copy_mnemonic"
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_width="140sp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@drawable/centre_button"
                     android:text="COPY"
+                    android:layout_marginRight="20sp"
                     android:textColor="@color/whiteTextColor" />
                 <Button
                     android:id="@+id/next_deploy_contract"
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_width="140sp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@drawable/centre_button"
@@ -143,6 +144,7 @@
 
 
         </LinearLayout>
+        <!-- Deployed Contract UI -->
         <LinearLayout
             android:id="@+id/contract_deploy_success"
             android:layout_width="match_parent"

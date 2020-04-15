@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,36 +45,6 @@ public class CreateEthAccountActivity extends AppCompatActivity {
     String mnemonic;
     String filePath;
     String contractAddress;
-    private boolean hasPermissions() {
-        int targetSdkVersion = getApplicationInfo().targetSdkVersion;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && targetSdkVersion >= Build.VERSION_CODES.Q) {
-            if (getApplicationContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST);
-                return false;
-            }
-            if (getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ACCESS_LOCATION_REQUEST);
-                return false;
-            }
-            if (getApplicationContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ACCESS_LOCATION_REQUEST);
-                return false;
-            }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getApplicationContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, ACCESS_LOCATION_REQUEST);
-                return false;
-            }
-            if (getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },1);
-                return false;
-            }            if (getApplicationContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },1);
-                return false;
-            }
-        }
-        return true;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +58,7 @@ public class CreateEthAccountActivity extends AppCompatActivity {
         displayWalletMnemonic = findViewById(R.id.display_wallet_mnemonic);
         loadingView = findViewById(R.id.loading_spinner);
         mnemonicPhrase = findViewById(R.id.mnemonic_phrase);
+        copyMnemonic = findViewById(R.id.copy_mnemonic);
         nextStepDeploy = findViewById(R.id.next_deploy_contract);
         contractDeploySuccessLayout = findViewById(R.id.contract_deploy_success);
         contractDeploySuccessBtn = findViewById(R.id.contract_deploy_success_btn);
@@ -94,9 +66,7 @@ public class CreateEthAccountActivity extends AppCompatActivity {
         registerReceiver(cryptoAccountReceiver, new IntentFilter( "cryptoAccountReceiver" ));
         registerReceiver(contractReceiver, new IntentFilter( "contractReceiver" ));
 
-        createWalletButton.setOnClickListener(v -> {
-            initializeEthAccount();
-        });
+        createWalletButton.setOnClickListener(v -> initializeEthAccount());
 
 
 /*
@@ -129,9 +99,12 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
             goToDeployedContractView();
         }
     };
-    public void initializeEthAccount(){
-        Log.d("Hello","wallet password : "+ walletPasswordEditText.getText().toString());
 
+    /*
+     * Creates a wallet file
+     * Send funds to the newly created wallet
+     * */
+    public void initializeEthAccount(){
         // Initially hide the content view.
         getWalletPassowrdLayout.setVisibility(View.GONE);
         loadingView.setVisibility(View.VISIBLE);
@@ -142,17 +115,22 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
 
         if (hasPermissions()){
             walletPassword = walletPasswordEditText.getText().toString();
-            Log.d("Hello","Password is from main Act : "+ walletPassword);
-
-           new InitializeEthAccountTask(getApplicationContext()).execute(walletPassword);
-
-        }
-        else {
-            Log.d("Hello","Pas de permission");
-
+            new InitializeEthAccountTask(getApplicationContext()).execute(walletPassword, "ropsten");
+        } else {
+            Log.d("Hello", "Permission denied to use mobile storage");
+            Toast.makeText(CreateEthAccountActivity.this, "Permission to use internal storage needed",
+                    Toast.LENGTH_LONG).show();
         }
 
     }
+
+    /*
+     * Change UI to : Wallet created successfully
+     * Display mnemonic phrase with an option to copy it
+     * 'Next' Button changes the ui and deploys the contract
+     * When the contract is successfully deployed the Wallet filepath, public @ and contract @
+     * are stored in the DB.
+     * */
     public void goToCreatedWalletView(){
 
         loadingView.setVisibility(View.GONE);
@@ -168,17 +146,61 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
                     android.R.integer.config_shortAnimTime);
 
             // Deploy Contract
-            eHealthContract =  new DeploySmartContractTask(getApplicationContext()).execute(walletPassword,filePath);
+            eHealthContract = new DeploySmartContractTask(getApplicationContext()).execute(walletPassword, filePath, "ropsten");
         });
+        copyMnemonic.setOnClickListener(vc -> copyMnemonicToClipboard());
     }
+
+    public void copyMnemonicToClipboard() {
+        //TODO write copy mnemonic function and assign it to the button
+    }
+
+    /*
+     * Change View To Contrat Deployed Succesfully
+     * 'Enjoy' button opens the Home Activity (GattMainActivity)
+     * */
     public  void goToDeployedContractView(){
         loadingView.setVisibility(View.GONE);
         contractDeploySuccessLayout.setVisibility(View.VISIBLE);
-        goToHomeActivity();
+        contractDeploySuccessBtn.setOnClickListener(v -> goToHomeActivity());
     }
+
     public void goToHomeActivity(){
         Intent intent = new Intent(CreateEthAccountActivity.this, HomeActivity.class);//TODO Change this to GattMainActivity
         startActivity(intent);
     }
+
+    private boolean hasPermissions() {
+        int targetSdkVersion = getApplicationInfo().targetSdkVersion;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && targetSdkVersion >= Build.VERSION_CODES.Q) {
+            if (getApplicationContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST);
+                return false;
+            }
+            if (getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ACCESS_LOCATION_REQUEST);
+                return false;
+            }
+            if (getApplicationContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ACCESS_LOCATION_REQUEST);
+                return false;
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getApplicationContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_LOCATION_REQUEST);
+                return false;
+            }
+            if (getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+            if (getApplicationContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 }
