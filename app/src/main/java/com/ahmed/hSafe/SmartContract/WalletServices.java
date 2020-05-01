@@ -4,6 +4,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.ahmed.hSafe.entities.EthNetwork;
+import com.ahmed.hSafe.entities.HealthInfo;
 
 import org.web3j.crypto.Bip39Wallet;
 import org.web3j.crypto.Credentials;
@@ -23,12 +24,13 @@ import org.web3j.utils.Convert;
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
-class Wallet {
+public class WalletServices {
 
     // gas limit
     private static BigInteger gasLimit = BigInteger.valueOf(5_300_000);
@@ -48,7 +50,7 @@ class Wallet {
     // web3j infura instance
     private static Web3j web3_ropsten = Web3j.build(new InfuraHttpService(url_ropsten));
     private static ContractGasProvider contractGasProvider = new StaticGasProvider(gasPrice, gasLimit);
-    private static Map<String, EthNetwork> web3js = new HashMap<>();
+    public static Map<String, EthNetwork> web3js = new HashMap<>();
 
     private static void setWeb3js() {
         Credentials credentialsRi = Credentials.create("0xf9319fe162c31947c0ca8fd649a536b7ca311b5f210afdc48b62fd7d18ce53e4");
@@ -59,7 +61,7 @@ class Wallet {
         web3js.put("ropsten", new EthNetwork(credentialsRo, ChainIdLong.ROPSTEN, web3_ropsten));
     }
 
-    static Credentials loadCredentials(String password, String path) throws Exception {
+    public static Credentials loadCredentials(String password, String path) throws Exception {
         Credentials credentials = WalletUtils.loadCredentials(password, path);
         Log.d("Hello", "Credentials loaded, Private KEY : " + credentials.getEcKeyPair().getPrivateKey().toString(16));
         Log.d("Hello", "Public Address : " + credentials.getAddress());
@@ -74,8 +76,15 @@ class Wallet {
         return bip39Wallet;
     }
 
+    public static Bip39Wallet restoreBipWallet(String password, String mnemonic) throws Exception {
+        String path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath();
+        Bip39Wallet bip39Wallet = WalletUtils.generateBip39WalletFromMnemonic(password, mnemonic, new File(path));
+        Log.d("Hello", "Wallet resotred, Mnemonic : " + bip39Wallet.getMnemonic());
+        return bip39Wallet;
+    }
+
     static String sendTransaction(String toAdress, String network) throws Exception {
-        if (web3js == null) setWeb3js();
+        if (web3js.isEmpty()) setWeb3js();
 
         EthNetwork net = web3js.get(network);
         TransactionReceipt transferReceipt = Transfer.sendFunds(net.web3Instance, net.adminCreds,
@@ -86,7 +95,7 @@ class Wallet {
     }
 
     static EHealth deployContract(Credentials walletCredentials, String network) throws Exception {
-        if (web3js == null) setWeb3js();
+        if (web3js.isEmpty()) setWeb3js();
         EthNetwork net = web3js.get(network);
         TransactionManager transactionManager = new RawTransactionManager(
                 net.web3Instance, walletCredentials, net.chainId);
@@ -98,7 +107,7 @@ class Wallet {
 
 
     static EHealth loadContract(String network, Credentials credentials, String contractAddress) {
-        if (web3js != null) setWeb3js();
+        if (web3js.isEmpty()) setWeb3js();
         EthNetwork net = web3js.get(network);
         EHealth eHealthContract = EHealth.load(contractAddress, net.web3Instance, credentials, contractGasProvider);
         Log.d("Write", "Contract address :: " + eHealthContract.getContractAddress());
@@ -106,9 +115,9 @@ class Wallet {
         return eHealthContract;
     }
 
-    static void createPatient(EHealth eHealthContract) throws Exception {
+    static void addHealthInfos(EHealth eHealthContract, HealthInfo healthInfo) throws Exception {
         //write to contract
-        TransactionReceipt transactionReceipt = eHealthContract.createPatient("AhmedX", new BigInteger(String.valueOf(20)), new BigInteger(String.valueOf(1))).send();
+        TransactionReceipt transactionReceipt = eHealthContract.addHealthInfos(new Date().toString(), "71", "6849", "500").send();
         Log.d("WriteContract", "Transaction Hash : " + transactionReceipt.toString());
     }
 

@@ -2,6 +2,8 @@ package com.ahmed.hSafe;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -86,7 +88,6 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
         public void onReceive(Context context, Intent intent) {
             mnemonic = (String) intent.getSerializableExtra("mnemonic");
             filePath = (String) intent.getSerializableExtra("filePath");
-            Log.d("Hello","From Main Activity : Steps/ Mnemonic : " + mnemonic+" <|> "+filePath);
             goToCreatedWalletView();
         }
     };
@@ -94,7 +95,6 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
         @Override
         public void onReceive(Context context, Intent intent) {
             contractAddress = (String) intent.getSerializableExtra("contractAddress");
-            Log.d("Hello","From Main Activity : contract Steps address : " + contractAddress);
             contractAddressTextView.setText(contractAddress);
             goToDeployedContractView();
         }
@@ -152,7 +152,11 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
     }
 
     public void copyMnemonicToClipboard() {
-        //TODO write copy mnemonic function and assign it to the button
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("mnemonic", mnemonicPhrase.getText());
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(CreateEthAccountActivity.this, "Mnemonic phrase copied to your clipboard",
+                Toast.LENGTH_SHORT).show();
     }
 
     /*

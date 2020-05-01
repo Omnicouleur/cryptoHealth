@@ -53,7 +53,7 @@ public class InitializeEthAccountTask extends AsyncTask<String, Void, Map<String
         // Create wallet and send funds to it
         try {
             // Create New Wallet
-            bip39Wallet = Wallet.createBipWallet(walletPassword);
+            bip39Wallet = WalletServices.createBipWallet(walletPassword);
             mnemonic = bip39Wallet.getMnemonic();
             resMap.put("mnemonic", mnemonic);
 
@@ -62,11 +62,11 @@ public class InitializeEthAccountTask extends AsyncTask<String, Void, Map<String
             resMap.put("filePath", filePath);
 
             // Load credentials from the wallet file
-            walletCredentials = Wallet.loadCredentials(walletPassword, filePath);
+            walletCredentials = WalletServices.loadCredentials(walletPassword, filePath);
             resMap.put("address", walletCredentials.getAddress());
 
             // Send funds to the newly created wallet
-            String transHash = Wallet.sendTransaction(walletCredentials.getAddress(), network);
+            String transHash = WalletServices.sendTransaction(walletCredentials.getAddress(), network);
             Log.d("Hello", "Transaction Hash : " + transHash);
 
             // Send data to main activity via broadcast

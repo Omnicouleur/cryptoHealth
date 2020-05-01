@@ -112,13 +112,29 @@
 
                 </RelativeLayout>
 
-                <Button
-                    android:id="@+id/logoutButton"
-                    style="@style/loginButton"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/loginViewsMargin"
-                    android:text="Logout" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
 
+                    <Button
+                        android:id="@+id/logoutButton"
+                        style="@style/loginButton"
+                        android:layout_width="150dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/loginViewsMargin"
+                        android:layout_marginRight="20sp"
+                        android:text="Logout" />
+
+                    <Button
+                        android:id="@+id/setAlarmButton"
+                        style="@style/loginButton"
+                        android:layout_width="150dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/loginViewsMargin"
+                        android:text="Set alarm" />
+
+                </LinearLayout>
 
 
             </LinearLayout>

@@ -63,6 +63,13 @@
             android:label="Home"
             >
         </activity>
+        <activity
+            android:name="com.ahmed.hSafe.CreateOrRestoreActivity"
+            android:label="Restore wallet"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <receiver android:name=".SmartContract.AddHealthInfoTaskSchedule"></receiver>
+
     </application>
 
 </manifest>

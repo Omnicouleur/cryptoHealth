@@ -38,7 +38,7 @@ public class DeploySmartContractTask extends AsyncTask<String, Void, EHealth> {
         filePath = urls[1];
         network = urls[2];
         try {
-            walletCredentials = Wallet.loadCredentials(walletPassword,filePath);
+            walletCredentials = WalletServices.loadCredentials(walletPassword, filePath);
         } catch (Exception e) {
             Log.d("Hello","Error while loading credentials : "+e.toString());
             e.printStackTrace();
@@ -50,7 +50,7 @@ public class DeploySmartContractTask extends AsyncTask<String, Void, EHealth> {
 
         // Deploy the contract
         try {
-            eHealthContract = Wallet.deployContract(walletCredentials, network);
+            eHealthContract = WalletServices.deployContract(walletCredentials, network);
             Log.d("Hello", network + " : Contract deployed at " + eHealthContract.getContractAddress());
             storeDataInDB();
         } catch (Exception e) {

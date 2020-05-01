@@ -24,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ahmed.hSafe.LoginActivity;
 import com.ahmed.hSafe.R;
-import com.ahmed.hSafe.SmartContract.WriteToContract;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class GattMainActivity extends AppCompatActivity {
@@ -108,7 +107,6 @@ public class GattMainActivity extends AppCompatActivity {
             }
 
         });
-        new WriteToContract().execute();
 
         pauseMeasureHeartRateBtn.setOnClickListener(v -> {
             pauseMeasureHeartRateBtn.setVisibility(View.GONE);

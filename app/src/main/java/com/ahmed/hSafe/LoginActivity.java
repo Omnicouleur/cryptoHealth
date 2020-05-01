@@ -34,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Check if user is signed in (non-null) and update UI accordingly.
-        //mAuth.signOut(); //TODO Remove this line
         currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             Log.d("Hello","user exists, cool : " + currentUser.getEmail());
@@ -50,7 +49,8 @@ public class LoginActivity extends AppCompatActivity {
         Button profileButton = findViewById(R.id.profileButton);
 
         profileButton.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, CreateEthAccountActivity.class);
+            //Intent intent = new Intent(LoginActivity.this, CreateEthAccountActivity.class);
+            Intent intent = new Intent(LoginActivity.this, CreateOrRestoreActivity.class);
             startActivity(intent);
         });
         final EditText lMail = findViewById(R.id.loginMail);
@@ -95,9 +95,11 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("Hello","file exists ? "+ isFilePresent(cryptoAccount.walletFilePath));
                     if (isFilePresent(cryptoAccount.walletFilePath)){
                         goToHomeActivity();
+                        return;
                     }
                 }
-                //TODO Redirect to CreateOrRestore wallet activity
+                Intent intent = new Intent(LoginActivity.this, CreateOrRestoreActivity.class);
+                startActivity(intent);
             }
 
             @Override

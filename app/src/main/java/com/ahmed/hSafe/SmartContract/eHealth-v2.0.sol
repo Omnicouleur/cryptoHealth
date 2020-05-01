@@ -54,15 +54,12 @@ contract eHealth  {
            }
     /* check healthInfo of a certain patient  */
     function checkHealthInfos() public view returns (string memory) {
-        string memory result = "Hello";
+        string memory result = '';
         if (msg.sender == owner)  {result = getHealthInfosForPatient();}
         else if (coachs[msg.sender]) {result = getHealthInfosForCoach() ;}
         else if (doctors[msg.sender]) {result = getHealthInfosForDoctor();}
         else {revert("Unauthorized access"); }
         return result;
-    }
-    function getPatientName() public pure returns (string memory) {
-        return "patients[msg.sender].name";
     }
      function getHealthInfosForPatient() private view returns (string memory) {
          string memory result = '';
@@ -72,7 +69,6 @@ contract eHealth  {
         result = append(result,healthInfos[i].steps,"|&|", 
                         healthInfos[i].calories,"|#|");
         }
-        return result;
      } 
     function getHealthInfosForDoctor() private view returns (string memory) {
         string memory result = '';
@@ -82,7 +78,6 @@ contract eHealth  {
         result = append(result,healthInfos[i].steps,"|&|", 
                         healthInfos[i].calories,"|#|");
         }
-        return result;
      }   
     function getHealthInfosForCoach() private view returns (string memory) {
          string memory result = '';
@@ -92,7 +87,6 @@ contract eHealth  {
         result = append(result,healthInfos[i].steps,"|&|", 
                         healthInfos[i].calories,"|#|");
         }
-        return result;
      }   
     function append(string memory a, string memory b, string memory c, string memory d, string memory e) internal pure returns (string memory) {
         return string(abi.encodePacked(a, b, c, d, e));
