@@ -6,23 +6,25 @@ import android.util.Log;
 
 public class DeviceScanCallback extends ScanCallback {
 
-    private GattMainActivity deviceConnector;
+    private final Callback callback;
+    private DeviceConnector deviceConnector;
 
-    DeviceScanCallback(GattMainActivity deviceConnector){
+    DeviceScanCallback(DeviceConnector deviceConnector, Callback callback) {
         this.deviceConnector = deviceConnector;
+        this.callback = callback;
     }
 
     @Override
     public void onScanResult(int callbackType, ScanResult result) {
         String deviceName = result.getDevice().getName();
         if (deviceName != null && deviceName.equalsIgnoreCase("Mi Band 3")){
-            Log.d("TAG", "Device found " + result.getDevice().getAddress() +
+            Log.d("MThesisLog", "Device found " + result.getDevice().getAddress() +
                     " " + deviceName);
             deviceConnector.setBluetoothDevice(result.getDevice());
             deviceConnector.getBluetoothAdapter()
                     .getBluetoothLeScanner()
                     .stopScan(this);
-            deviceConnector.connectDevice();
+            deviceConnector.connectDevice(callback);
         }
     }
 

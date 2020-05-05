@@ -78,7 +78,7 @@ public class CreateOrRestoreActivity extends AppCompatActivity {
                 storePathInDB(path);
 
             } catch (Exception e) {
-                Log.d("Hello", "Error while restoring wallet : " + e.toString());
+                Log.d("MThesisLog", "Error while restoring wallet : " + e.toString());
                 e.printStackTrace();
             }
         });
@@ -98,11 +98,11 @@ public class CreateOrRestoreActivity extends AppCompatActivity {
         if (user != null) {
             mDatabase.child("cryptoAccounts").child(user.getUid()).updateChildren(pathUpdate).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Log.d("Hello", "Path updated ");
+                    Log.d("MThesisLog", "Path updated ");
                 }
             });
         } else {
-            Log.d("Hello", "Error in storing cyptoAccount in DB since no user is logged in, user is ");
+            Log.d("MThesisLog", "Error in storing cyptoAccount in DB since no user is logged in, user is ");
         }
     }
 }

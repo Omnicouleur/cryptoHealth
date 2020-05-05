@@ -1,5 +1,6 @@
 package com.ahmed.hSafe.SmartContract;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -24,6 +25,7 @@ public class DeploySmartContractTask extends AsyncTask<String, Void, EHealth> {
     private String walletPassword;
     private Credentials walletCredentials;
     private String filePath;
+    @SuppressLint("StaticFieldLeak")
     private Context context;
     private String network;
 
@@ -40,21 +42,21 @@ public class DeploySmartContractTask extends AsyncTask<String, Void, EHealth> {
         try {
             walletCredentials = WalletServices.loadCredentials(walletPassword, filePath);
         } catch (Exception e) {
-            Log.d("Hello","Error while loading credentials : "+e.toString());
+            Log.d("MThesisLog", "Error while loading credentials : " + e.toString());
             e.printStackTrace();
         }
 
-        Log.d("Hello","Password is : "+walletPassword);
+        Log.d("MThesisLog", "Password is : " + walletPassword);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
         // Deploy the contract
         try {
             eHealthContract = WalletServices.deployContract(walletCredentials, network);
-            Log.d("Hello", network + " : Contract deployed at " + eHealthContract.getContractAddress());
+            Log.d("MThesisLog", network + " : Contract deployed at " + eHealthContract.getContractAddress());
             storeDataInDB();
         } catch (Exception e) {
-            Log.d("Hello", "Error while deploying contract : " + e.getMessage() + " || " + e.toString());
+            Log.d("MThesisLog", "Error while deploying contract : " + e.getMessage() + " || " + e.toString());
             e.printStackTrace();
         }
         return eHealthContract;
@@ -76,7 +78,7 @@ public class DeploySmartContractTask extends AsyncTask<String, Void, EHealth> {
                 }
             });
         } else {
-            Log.d("Hello", "Error in storing cyptoAccount in DB since no user is logged in, user is ");
+            Log.d("MThesisLog", "Error in storing cyptoAccount in DB since no user is logged in, user is ");
         }
 
     }

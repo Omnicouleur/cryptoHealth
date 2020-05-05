@@ -9,17 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.ahmed.hSafe.BluetoothConnection.GattMainActivity;
 import com.ahmed.hSafe.entities.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -47,45 +41,41 @@ public class EnquiryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         AutoCompleteTextView autoCompleteTextView = findViewById(R.id.act1);
         autoCompleteTextView.setThreshold(1);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,cities);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, cities);
         autoCompleteTextView.setAdapter(adapter);
 
-        autoCompleteTextView.setOnClickListener((v)->{
-            autoCompleteTextView.showDropDown();
-        });
+        autoCompleteTextView.setOnClickListener((v) -> autoCompleteTextView.showDropDown());
 
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroupGender);
+        RadioGroup radioGroup = findViewById(R.id.radioGroupGender);
         EditText editTextFullName = findViewById(R.id.editTextFullName);
         EditText editTextAge = findViewById(R.id.editTextAge);
         Button btnSend = findViewById(R.id.btnSend);
         btnSend.setOnClickListener(v -> {
 
             String city = autoCompleteTextView.getText().toString();
-            Log.d("Hello","City : " + city);
+            Log.d("MThesisLog", "City : " + city);
             int selectedId = radioGroup.getCheckedRadioButtonId();
 
             // find the radiobutton by returned id
             radioButton =  findViewById(selectedId);
             String gender = radioButton.getText().toString();
-            Log.d("Hello","Gender : " + gender);
+            Log.d("MThesisLog", "Gender : " + gender);
 
             int age = Integer.parseInt(editTextAge.getText().toString());
-            Log.d("Hello","Age : " + age);
+            Log.d("MThesisLog", "Age : " + age);
 
             String fullName = editTextFullName.getText().toString();
-            Log.d("Hello","FullName : " +fullName);
+            Log.d("MThesisLog", "FullName : " + fullName);
 
             FirebaseUser user = mAuth.getCurrentUser();
-            Log.d("Hello", "user : "+ user.getUid() +user.getDisplayName()+user.getEmail() );
+            assert user != null;
+            Log.d("MThesisLog", "user : " + user.getDisplayName() + user.getEmail());
 
             User mohamed = new User(fullName,gender,age,city);
             //User mohamed = new User("Mohamed Trabelsi","Male",29,"Pensylvania");
-            mDatabase.child("users").child(user.getUid()).setValue(mohamed).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    Intent intent = new Intent(EnquiryActivity.this, CreateEthAccountActivity.class);
-                    startActivity(intent);
-                }
+            mDatabase.child("users").child(user.getUid()).setValue(mohamed).addOnCompleteListener(this, task -> {
+                Intent intent = new Intent(EnquiryActivity.this, CreateEthAccountActivity.class);
+                startActivity(intent);
             });
 
                     });

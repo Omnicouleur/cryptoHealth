@@ -1,11 +1,14 @@
 package com.ahmed.hSafe.SmartContract;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
+import com.ahmed.hSafe.Utilities.InternalStorage;
+import com.ahmed.hSafe.entities.Creds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -13,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.web3j.crypto.Bip39Wallet;
 import org.web3j.crypto.Credentials;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +35,7 @@ public class InitializeEthAccountTask extends AsyncTask<String, Void, Map<String
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private String walletPassword;
+    @SuppressLint("StaticFieldLeak")
     private Context context;
     private Map<String, String> resMap;
     private String network;
@@ -61,13 +66,22 @@ public class InitializeEthAccountTask extends AsyncTask<String, Void, Map<String
             filePath = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath() + "/" + bip39Wallet.getFilename();
             resMap.put("filePath", filePath);
 
+            //Save creds object in internal storage to avoid asking for password each time
+            try {
+                InternalStorage.writeObject(context, "Credentials", new Creds(walletPassword, filePath));
+                Log.d("MThesisLog", "Object saved");
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("MThesisLog", "Error while saving obj to internal storage : " + e.getMessage());
+            }
+
             // Load credentials from the wallet file
             walletCredentials = WalletServices.loadCredentials(walletPassword, filePath);
             resMap.put("address", walletCredentials.getAddress());
 
             // Send funds to the newly created wallet
             String transHash = WalletServices.sendTransaction(walletCredentials.getAddress(), network);
-            Log.d("Hello", "Transaction Hash : " + transHash);
+            Log.d("MThesisLog", "Transaction Hash : " + transHash);
 
             // Send data to main activity via broadcast
             Intent intent = new Intent("cryptoAccountReceiver");
@@ -77,7 +91,7 @@ public class InitializeEthAccountTask extends AsyncTask<String, Void, Map<String
             context.sendBroadcast(intent);
             }
             catch (Exception e) {
-                Log.d("Hello","Error  : " + e.getMessage() +" || "+ e.toString());
+                Log.d("MThesisLog", "Error  : " + e.getMessage() + " || " + e.toString());
                 e.printStackTrace();
             }
         return resMap ;

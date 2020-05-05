@@ -117,7 +117,7 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
             walletPassword = walletPasswordEditText.getText().toString();
             new InitializeEthAccountTask(getApplicationContext()).execute(walletPassword, "ropsten");
         } else {
-            Log.d("Hello", "Permission denied to use mobile storage");
+            Log.d("MThesisLog", "Permission denied to use mobile storage");
             Toast.makeText(CreateEthAccountActivity.this, "Permission to use internal storage needed",
                     Toast.LENGTH_LONG).show();
         }
@@ -154,6 +154,7 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
     public void copyMnemonicToClipboard() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("mnemonic", mnemonicPhrase.getText());
+        assert clipboard != null;
         clipboard.setPrimaryClip(clip);
         Toast.makeText(CreateEthAccountActivity.this, "Mnemonic phrase copied to your clipboard",
                 Toast.LENGTH_SHORT).show();

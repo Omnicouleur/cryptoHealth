@@ -50,7 +50,7 @@ public class WalletServices {
     // web3j infura instance
     private static Web3j web3_ropsten = Web3j.build(new InfuraHttpService(url_ropsten));
     private static ContractGasProvider contractGasProvider = new StaticGasProvider(gasPrice, gasLimit);
-    public static Map<String, EthNetwork> web3js = new HashMap<>();
+    private static Map<String, EthNetwork> web3js = new HashMap<>();
 
     private static void setWeb3js() {
         Credentials credentialsRi = Credentials.create("0xf9319fe162c31947c0ca8fd649a536b7ca311b5f210afdc48b62fd7d18ce53e4");
@@ -63,8 +63,8 @@ public class WalletServices {
 
     public static Credentials loadCredentials(String password, String path) throws Exception {
         Credentials credentials = WalletUtils.loadCredentials(password, path);
-        Log.d("Hello", "Credentials loaded, Private KEY : " + credentials.getEcKeyPair().getPrivateKey().toString(16));
-        Log.d("Hello", "Public Address : " + credentials.getAddress());
+        Log.d("MThesisLog", "Credentials loaded, Private KEY : " + credentials.getEcKeyPair().getPrivateKey().toString(16));
+        Log.d("MThesisLog", "Public Address : " + credentials.getAddress());
 
         return credentials;
     }
@@ -72,14 +72,14 @@ public class WalletServices {
     static Bip39Wallet createBipWallet(String password) throws Exception {
         String path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath();
         Bip39Wallet bip39Wallet = WalletUtils.generateBip39Wallet(password, new File(path));
-        Log.d("Hello", "Wallet created, Mnemonic : " + bip39Wallet.getMnemonic());
+        Log.d("MThesisLog", "Wallet created, Mnemonic : " + bip39Wallet.getMnemonic());
         return bip39Wallet;
     }
 
     public static Bip39Wallet restoreBipWallet(String password, String mnemonic) throws Exception {
         String path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath();
         Bip39Wallet bip39Wallet = WalletUtils.generateBip39WalletFromMnemonic(password, mnemonic, new File(path));
-        Log.d("Hello", "Wallet resotred, Mnemonic : " + bip39Wallet.getMnemonic());
+        Log.d("MThesisLog", "Wallet resotred, Mnemonic : " + bip39Wallet.getMnemonic());
         return bip39Wallet;
     }
 
@@ -87,6 +87,7 @@ public class WalletServices {
         if (web3js.isEmpty()) setWeb3js();
 
         EthNetwork net = web3js.get(network);
+        assert net != null;
         TransactionReceipt transferReceipt = Transfer.sendFunds(net.web3Instance, net.adminCreds,
                 toAdress,  // you can put any address here
                 BigDecimal.valueOf(25), Convert.Unit.FINNEY)
@@ -97,11 +98,12 @@ public class WalletServices {
     static EHealth deployContract(Credentials walletCredentials, String network) throws Exception {
         if (web3js.isEmpty()) setWeb3js();
         EthNetwork net = web3js.get(network);
+        assert net != null;
         TransactionManager transactionManager = new RawTransactionManager(
                 net.web3Instance, walletCredentials, net.chainId);
-        Log.d("Hello","Account's Address : "+ walletCredentials.getAddress() );
+        Log.d("MThesisLog", "Account's Address : " + walletCredentials.getAddress());
         EHealth contract = EHealth.deploy(net.web3Instance, transactionManager, contractGasProvider).send();
-        Log.d("Hello","Contract deployed successfuly \nContract's Address : "+contract.getContractAddress());
+        Log.d("MThesisLog", "Contract deployed successfuly \nContract's Address : " + contract.getContractAddress());
         return contract;
     }
 
@@ -109,16 +111,17 @@ public class WalletServices {
     static EHealth loadContract(String network, Credentials credentials, String contractAddress) {
         if (web3js.isEmpty()) setWeb3js();
         EthNetwork net = web3js.get(network);
+        assert net != null;
         EHealth eHealthContract = EHealth.load(contractAddress, net.web3Instance, credentials, contractGasProvider);
-        Log.d("Write", "Contract address :: " + eHealthContract.getContractAddress());
+        Log.d("MThesisLog", "Contract address :: " + eHealthContract.getContractAddress());
 
         return eHealthContract;
     }
 
     static void addHealthInfos(EHealth eHealthContract, HealthInfo healthInfo) throws Exception {
         //write to contract
-        TransactionReceipt transactionReceipt = eHealthContract.addHealthInfos(new Date().toString(), "71", "6849", "500").send();
-        Log.d("WriteContract", "Transaction Hash : " + transactionReceipt.toString());
+        TransactionReceipt transactionReceipt = eHealthContract.addHealthInfos(new Date().toString(), healthInfo.getHeartBeat(), healthInfo.getCalories(), healthInfo.getSteps()).send();
+        Log.d("MThesisLog", "Transaction Hash : " + transactionReceipt.toString());
     }
 
 }

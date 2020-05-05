@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import java.util.UUID;
@@ -42,19 +41,32 @@ public class HeartBeatMeasurer  {
      */
     private BluetoothGatt btGatt;
     private Context context;
-
+    private Callback callback;
     /**
      * keeps current heart beat value taken from miband device
      */
     private String heartRateValue = "0";
 
-    HeartBeatMeasurer(Context context) {
+    public HeartBeatMeasurer(Context context) {
         this.context = context;
 
     }
 
-    public void updateHrChars(BluetoothGatt gatt){
-        this.btGatt = gatt;
+    void updateHrChars(BluetoothGatt gatt) {
+        //this.btGatt = gatt;
+        service1 = btGatt.getService(UUID.fromString(SERVICE1));
+        heartService = btGatt.getService(UUID.fromString(SERVICE_HEART_RATE));
+
+        hrCtrlChar = heartService.getCharacteristic(UUID.fromString(CHAR_HEART_RATE_CONTROL));
+        hrMeasureChar = heartService.getCharacteristic(UUID.fromString(CHAR_HEART_RATE_MEASURE));
+        sensorChar = service1.getCharacteristic(UUID.fromString(CHAR_SENSOR));
+
+        btGatt.setCharacteristicNotification(hrCtrlChar, true);
+        btGatt.setCharacteristicNotification(hrMeasureChar, true);
+    }
+
+    public void updateHrChars() {
+        //this.btGatt = gatt;
         service1 = btGatt.getService(UUID.fromString(SERVICE1));
         heartService = btGatt.getService(UUID.fromString(SERVICE_HEART_RATE));
 
@@ -71,59 +83,46 @@ public class HeartBeatMeasurer  {
      * @param characteristic GATT characteristic is a basic data element used
      *                       to construct a GATT service
      */
-    public void handleHeartRateData(final BluetoothGattCharacteristic characteristic) {
+    void handleHeartRateData(final BluetoothGattCharacteristic characteristic) {
         byte currentHrValue = characteristic.getValue()[1];
         heartRateValue = String.valueOf(currentHrValue);
+        callback.invoke(null, heartRateValue);
+//        Intent intent = new Intent("heartRateReceiver");
+//        intent.putExtra("heartRate", heartRateValue);
+//        context.sendBroadcast(intent);
 
-        Intent intent = new Intent("heartRateReceiver");
-        intent.putExtra("heartRate", heartRateValue);
-        context.sendBroadcast(intent);
-
-        Log.d("MiBand3","(Handle) Heart Rate Value = "+ heartRateValue);
+        Log.d("MThesisLog", "(Handle) Heart Rate Value = " + heartRateValue);
     }
 
     /**
      * Starts heartBeat data fetching from miband device.
      */
-    public void startHrCalculation() {
+    public void startHrCalculation(Callback callback) {
+        this.callback = callback;
         sensorChar.setValue(new byte[]{0x01, 0x03, 0x19});
         btGatt.writeCharacteristic(sensorChar);
-        //successCallback.invoke(null, heartRateValue);
+    }
+
+    void startHrCalculation() {
+        sensorChar.setValue(new byte[]{0x01, 0x03, 0x19});
+        btGatt.writeCharacteristic(sensorChar);
     }
 
     public void stopHrCalculation() {
         hrCtrlChar.setValue(new byte[]{0x15, 0x01, 0x00});
-        Log.d("INFO","hrCtrlChar: " + btGatt.writeCharacteristic(hrCtrlChar));
+        btGatt.writeCharacteristic(hrCtrlChar);
+        //Log.d("MThesisLog","hrCtrlChar: " + btGatt.writeCharacteristic(hrCtrlChar));
     }
 
-    /**
-     * Returns current heart beat value.
-     */
-    public String getHeartRate(String currentHeartBeat) {
-        if(Integer.valueOf(heartRateValue).equals(Integer.valueOf(currentHeartBeat))||true){
-            hrCtrlChar.setValue(new byte[]{0x16});
-            btGatt.writeCharacteristic(hrCtrlChar);
 
-            Intent intent = new Intent("heartRateReceiver");
-            intent.putExtra("heartRate", heartRateValue);
-            context.sendBroadcast(intent);
-
-            Log.d("MiBand3","Heart Rate Value = "+ heartRateValue);
-        }
-        return heartRateValue;
-        //successCallback.invoke(null, heartRateValue);
-    }
 
     /**
      * Re-inits BluetoothGatt instance in case bluetooth connection was interrupted somehow.
      * @param bluetoothGatt instance to be re-initialized
      */
-    public void updateBluetoothConfig(BluetoothGatt bluetoothGatt){
+    void updateBluetoothConfig(BluetoothGatt bluetoothGatt) {
         this.btGatt = bluetoothGatt;
     }
 
 
-    public String getName() {
-        return HeartBeatMeasurer.class.getSimpleName();
-    }
 }

@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -33,31 +32,18 @@ public class GattCallbackHandler extends BluetoothGattCallback {
 
     private BluetoothGattCharacteristic authChar;
     private BluetoothGattDescriptor authDesc;
-
     private BluetoothGattCharacteristic hrCtrlChar;
     private BluetoothGattDescriptor hrDescChar;
     private BluetoothGattCharacteristic batteryChar;
     private Context context;
     private HeartBeatMeasurer heartBeatMeasurer;
+    final private char[] hexArray = "0123456789ABCDEF".toCharArray();
+    private Callback callback;
 
-    public GattCallbackHandler(Context applicationContext, HeartBeatMeasurer heartBeatMeasurer){
+    GattCallbackHandler(Context applicationContext, HeartBeatMeasurer heartBeatMeasurer, Callback callback) {
         this.heartBeatMeasurer = heartBeatMeasurer;
         this.context = applicationContext;
-    }
-
-    @Override
-    public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-        switch (newState) {
-            case BluetoothGatt.STATE_DISCONNECTED:
-                Log.d("Info", "Device disconnected");
-                break;
-            case BluetoothGatt.STATE_CONNECTED: {
-                Log.d("Info", "Connected with device");
-                Log.d("Info", "Discovering services");
-                gatt.discoverServices();
-            }
-            break;
-        }
+        this.callback = callback;
     }
 
     private void init(BluetoothGatt gatt) {
@@ -77,7 +63,6 @@ public class GattCallbackHandler extends BluetoothGattCallback {
         init(gatt);
         if (gatt.getDevice().getBondState() != gatt.getDevice().BOND_BONDED) {
             authoriseMiBand(gatt);
-            Log.d("need","Bonding..."+gatt.getDevice().getBondState());
         }
         else {
             BluetoothGattService service1 = gatt.getService(UUID.fromString(SERVICE1));
@@ -92,6 +77,21 @@ public class GattCallbackHandler extends BluetoothGattCallback {
         Log.d("INFO", "Found NOTIFICATION BluetoothGattDescriptor: " + authDesc.toString());
         authDesc.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);       // 2
         gatt.writeDescriptor(authDesc);                                             // 2
+    }
+
+    @Override
+    public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+        switch (newState) {
+            case BluetoothGatt.STATE_DISCONNECTED:
+                Log.d("MThesisLog", "Device disconnected");
+                break;
+            case BluetoothGatt.STATE_CONNECTED: {
+                Log.d("MThesisLog", "Connected with device");
+                Log.d("MThesisLog", "Discovering services");
+                gatt.discoverServices();
+            }
+            break;
+        }
     }
 
     @Override
@@ -121,50 +121,14 @@ public class GattCallbackHandler extends BluetoothGattCallback {
                         BluetoothGattService service1 = gatt.getService(UUID.fromString(SERVICE1));
                         BluetoothGattCharacteristic stepsChar = service1.getCharacteristic(UUID.fromString(CHAR_STEPS));
                         gatt.readCharacteristic(stepsChar);
+
                     }
                 }
                 break;
             }
             case CHAR_HEART_RATE_MEASURE:{
                 heartBeatMeasurer.handleHeartRateData(characteristic);
-                Log.d("Hello","CHAR_HEART_RATE_MEASURE");
-
                 break;
-            }
-        }
-    }
-
-    @Override
-    public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-        Log.i("INFO", "onCharacteristicRead uuid: " + characteristic.getUuid().toString()
-                + " value: " + Arrays.toString(characteristic.getValue()) + " status: " + status);
-        byte[] value = characteristic.getValue();
-        switch (characteristic.getUuid().toString()) {
-            case CHAR_STEPS: {
-                Log.d("MiBand3","STEPS");
-                String steps =  bytesToHex(value).substring(8,10) + bytesToHex(value).substring(6,8) + bytesToHex(value).substring(4,6) + bytesToHex(value).substring(2,4) ;
-                String distance = bytesToHex(value).substring(16,18) + bytesToHex(value).substring(14,16)+ bytesToHex(value).substring(12,14) + bytesToHex(value).substring(10,12) ;
-                String calories = bytesToHex(value).substring(24,26) + bytesToHex(value).substring(22,24)+bytesToHex(value).substring(20,22) + bytesToHex(value).substring(18,20) ;
-                long decimalstep = Long.parseLong(steps,16);
-                long decimalCalories = Long.parseLong(calories,16);
-                long decimalDistance = Long.parseLong(distance,16);
-
-                Intent intent = new Intent("stepsReceiver");
-                intent.putExtra("steps", Long.toString(decimalstep));
-                intent.putExtra("calories", Long.toString(decimalCalories));
-                intent.putExtra("distance", Long.toString(decimalDistance));
-                context.sendBroadcast(intent);
-
-                Log.d("MiBand3","STEPS = "+decimalstep);
-                Log.d("MiBand3","Calories = "+decimalCalories);
-                Log.d("MiBand3","Distance = "+decimalDistance);
-                gatt.readCharacteristic(batteryChar);
-                break;
-            }
-            case CHAR_BATTERY: {
-                //infoReceiver.handleBatteryData(characteristic.getValue());
-                Log.d("MiBand3","BATTERY = "+value[1]);
-
             }
         }
     }
@@ -236,9 +200,35 @@ public class GattCallbackHandler extends BluetoothGattCallback {
             authoriseMiBand(gatt);
         }
     }
-    final protected  char[] hexArray = "0123456789ABCDEF".toCharArray();
 
-    public  String bytesToHex(byte[] bytes) {
+    @Override
+    public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+        Log.i("INFO", "onCharacteristicRead uuid: " + characteristic.getUuid().toString()
+                + " value: " + Arrays.toString(characteristic.getValue()) + " status: " + status);
+        byte[] value = characteristic.getValue();
+        switch (characteristic.getUuid().toString()) {
+            case CHAR_STEPS: {
+                // Get decimal values
+                String steps = bytesToHex(value).substring(8, 10) + bytesToHex(value).substring(6, 8) + bytesToHex(value).substring(4, 6) + bytesToHex(value).substring(2, 4);
+                String distance = bytesToHex(value).substring(16, 18) + bytesToHex(value).substring(14, 16) + bytesToHex(value).substring(12, 14) + bytesToHex(value).substring(10, 12);
+                String calories = bytesToHex(value).substring(24, 26) + bytesToHex(value).substring(22, 24) + bytesToHex(value).substring(20, 22) + bytesToHex(value).substring(18, 20);
+                long decimalstep = Long.parseLong(steps, 16);
+                long decimalCalories = Long.parseLong(calories, 16);
+                long decimalDistance = Long.parseLong(distance, 16);
+
+                callback.invoke(null, decimalstep, decimalDistance, decimalCalories);
+                Log.d("MThesisLog", "STEPS = " + decimalstep + " || Calories = " + decimalCalories + " || Distance = " + decimalDistance);
+                gatt.readCharacteristic(batteryChar);
+                break;
+            }
+            case CHAR_BATTERY: {
+                Log.d("MThesisLog", "BATTERY = " + value[1]);
+
+            }
+        }
+    }
+
+    private String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for ( int j = 0; j < bytes.length; j++ ) {
             int v = bytes[j] & 0xFF;

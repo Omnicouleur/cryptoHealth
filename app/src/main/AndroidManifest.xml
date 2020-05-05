@@ -40,35 +40,29 @@
             android:theme="@style/AppTheme.ProfileTheme">
         </activity>
         <activity
+            android:name="com.ahmed.hSafe.TaskActivity"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme.ProfileTheme" />
+        <activity
             android:name="com.ahmed.hSafe.BluetoothConnection.GattMainActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label="Home"
-            >
-        </activity>
+            android:label="Home" />
         <activity
             android:name="com.ahmed.hSafe.CreateEthAccountActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label="Wallet creation"
-            >
-        </activity>
+            android:label="Wallet creation" />
         <activity
             android:name="com.ahmed.hSafe.EnquiryActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label="Enquiry"
-            >
-        </activity>
+            android:label="Enquiry" />
         <activity
             android:name="com.ahmed.hSafe.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label="Home"
-            >
-        </activity>
+            android:label="Home" />
         <activity
             android:name="com.ahmed.hSafe.CreateOrRestoreActivity"
             android:label="Restore wallet"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
-        <receiver android:name=".SmartContract.AddHealthInfoTaskSchedule"></receiver>
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 

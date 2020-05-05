@@ -4,14 +4,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -25,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ahmed.hSafe.LoginActivity;
 import com.ahmed.hSafe.R;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 public class GattMainActivity extends AppCompatActivity {
 
@@ -43,6 +42,27 @@ public class GattMainActivity extends AppCompatActivity {
     ImageView measuringHeartRateIcon;
     Context context;
     Button logoutBtn;
+    private final BroadcastReceiver stepsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String steps = (String) intent.getSerializableExtra("steps");
+            String calories = (String) intent.getSerializableExtra("calories");
+            String distance = (String) intent.getSerializableExtra("distance");
+            Log.d("MThesisLog", "From Main Activity : Steps : " + steps);
+            stepsTextView.setText(steps);
+            caloriesTextView.setText(calories);
+            distanceTextView.setText(distance);
+        }
+    };
+    private final BroadcastReceiver heartRateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String heartRate = (String) intent.getSerializableExtra("heartRate");
+            Log.d("MThesisLog", "From Main Activity : Steps : " + heartRate);
+            heartRateTextView.setText(heartRate);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -51,15 +71,16 @@ public class GattMainActivity extends AppCompatActivity {
          //setContentView(R.layout.activity_main);
          setContentView(R.layout.activity_home);
          heartBeatMeasurer = new HeartBeatMeasurer(context);
-         gattCallbackHandler = new GattCallbackHandler(context,heartBeatMeasurer);
+        gattCallbackHandler = new GattCallbackHandler(context, heartBeatMeasurer, args -> {
+        });
 
          // Register services to get data from mi band
          registerReceiver(stepsReceiver,new IntentFilter("stepsReceiver"));
          registerReceiver(heartRateReceiver,new IntentFilter("heartRateReceiver"));
 
          Context mainContext = this.getApplicationContext();
-         bluetoothAdapter = ((BluetoothManager) mainContext
-                    .getSystemService(BLUETOOTH_SERVICE))
+        bluetoothAdapter = ((BluetoothManager) Objects.requireNonNull(mainContext
+                .getSystemService(BLUETOOTH_SERVICE)))
                     .getAdapter();
          applicationContext = getApplicationContext();
 
@@ -72,13 +93,13 @@ public class GattMainActivity extends AppCompatActivity {
                              1);
          }
 
-         final ScanCallback deviceScanCallback = new DeviceScanCallback(this);
-         BluetoothLeScanner bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
-         if(bluetoothScanner != null){
-             bluetoothScanner.startScan(deviceScanCallback);
-         }
-         final int DISCOVERY_TIME_DELAY_IN_MS = 120000;
-        new Handler().postDelayed(() -> bluetoothAdapter.getBluetoothLeScanner().stopScan(deviceScanCallback), DISCOVERY_TIME_DELAY_IN_MS);
+//         final ScanCallback deviceScanCallback = new DeviceScanCallback(this);
+//         BluetoothLeScanner bluetoothScanner = bluetoothAdapter.getBluetoothLeScanner();
+//         if(bluetoothScanner != null){
+//             bluetoothScanner.startScan(deviceScanCallback);
+//         }
+//         final int DISCOVERY_TIME_DELAY_IN_MS = 120000;
+//        new Handler().postDelayed(() -> bluetoothAdapter.getBluetoothLeScanner().stopScan(deviceScanCallback), DISCOVERY_TIME_DELAY_IN_MS);
 
         logoutBtn = findViewById(R.id.logoutButton);
         logoutBtn.setOnClickListener(v -> {
@@ -120,31 +141,9 @@ public class GattMainActivity extends AppCompatActivity {
 //        getHrBtn.setOnClickListener(v -> {
 //            heartBeatMeasurer.updateHrChars(bluetoothGatt);
 //            heartBeatMeasurer.getHeartRate("70");
-//            Log.d("MiBand3","Button getHeartRate works");
+//            Log.d("MThesisLog","Button getHeartRate works");
 //        });
     }
-
-    private final BroadcastReceiver stepsReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String steps = (String) intent.getSerializableExtra("steps");
-            String calories = (String) intent.getSerializableExtra("calories");
-            String distance = (String) intent.getSerializableExtra("distance");
-            Log.d("Hello","From Main Activity : Steps : " + steps);
-            stepsTextView.setText(steps);
-            caloriesTextView.setText(calories);
-            distanceTextView.setText(distance);
-        }
-    };
-
-    private final BroadcastReceiver heartRateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String heartRate = (String) intent.getSerializableExtra("heartRate");
-            Log.d("Hello","From Main Activity : Steps : " + heartRate);
-            heartRateTextView.setText(heartRate);
-        }
-    };
 
     @Override
     protected void onDestroy(){
@@ -158,7 +157,7 @@ public class GattMainActivity extends AppCompatActivity {
 //        bluetoothDevice.createBond();
         bluetoothGatt = bluetoothDevice.connectGatt(mainContext, true, gattCallbackHandler);
         if (bluetoothGatt.getDevice().getBondState() == BluetoothDevice.BOND_BONDED) {
-            Log.d("Hello", "Bonded");
+            Log.d("MThesisLog", "Bonded");
             bluetoothGatt.discoverServices();
         }
 
