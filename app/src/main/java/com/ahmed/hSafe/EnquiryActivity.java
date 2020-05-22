@@ -70,19 +70,12 @@ public class EnquiryActivity extends AppCompatActivity {
             FirebaseUser user = mAuth.getCurrentUser();
             assert user != null;
             Log.d("MThesisLog", "user : " + user.getDisplayName() + user.getEmail());
-
-            User mohamed = new User(fullName,gender,age,city);
+            User userInfo = new User(fullName, gender, age, city);
             //User mohamed = new User("Mohamed Trabelsi","Male",29,"Pensylvania");
-            mDatabase.child("users").child(user.getUid()).setValue(mohamed).addOnCompleteListener(this, task -> {
+            mDatabase.child("users").child(user.getUid()).setValue(userInfo).addOnCompleteListener(this, task -> {
                 Intent intent = new Intent(EnquiryActivity.this, CreateEthAccountActivity.class);
                 startActivity(intent);
             });
-
-                    });
-
-
-
-
-
+        });
     }
 }

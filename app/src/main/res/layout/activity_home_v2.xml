@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_bg_bottom"
+    android:fitsSystemWindows="true"
+    tools:context=".ProfileActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@drawable/home_bg_bottom"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                android:id="@+id/profile_icon"
+                style="@style/profileDetailsImage"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/profile_icon" />
+
+            <com.timqi.sectorprogressview.ColorfulRingProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/crpv"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:bgColor="#e1e1e1"
+                app:fgColorEnd="#ff4800"
+                app:fgColorStart="#ffe400"
+                app:percent="75"
+                app:startAngle="0"
+                app:strokeWidth="21dp" />
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_directions_run_black_36dp">
+
+            </ImageView>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/stepsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7810"
+            android:textSize="28dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="step"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20sp"></View>
+
+        <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context=".ProfileActivity"
+            tools:showIn="@layout/activity_home">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/app_bar"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/headerText"
+                        android:layout_marginBottom="20dp"
+                        android:text="Today's activity"
+                        android:textColor="@color/gradBlue" />
+
+                    <RelativeLayout style="@style/profileDetailsLayout">
+
+                        <ImageView
+                            android:id="@+id/nameImageView"
+                            style="@style/profileDetailsImage"
+                            android:src="@drawable/vd_calories_ic2" />
+
+                        <TextView
+                            android:id="@+id/caloriesTextView"
+                            style="@style/profileDetailsTextMain"
+                            android:layout_toRightOf="@id/nameImageView"
+                            android:text="270" />
+
+                        <TextView
+                            style="@style/profileDetailsMiniText"
+                            android:layout_toRightOf="@id/nameImageView"
+                            android:text="Cal" />
+
+                    </RelativeLayout>
+
+                    <View style="@style/proifleDetailsView" />
+
+                    <RelativeLayout style="@style/profileDetailsLayout">
+
+                        <ImageView
+                            android:id="@+id/addressImageView"
+                            style="@style/profileDetailsImage"
+                            android:src="@drawable/vd_distance_ic3" />
+
+                        <TextView
+                            android:id="@+id/distanceTextView"
+                            style="@style/profileDetailsTextMain"
+                            android:layout_toRightOf="@id/addressImageView"
+                            android:text="6.8" />
+
+                        <TextView
+                            style="@style/profileDetailsMiniText"
+                            android:layout_toRightOf="@id/addressImageView"
+                            android:text="km" />
+
+                    </RelativeLayout>
+
+                    <View style="@style/proifleDetailsView" />
+
+                    <RelativeLayout
+                        android:id="@+id/heartRateLayout"
+                        style="@style/profileDetailsLayout"
+                        android:layout_marginBottom="20dp">
+
+                        <ImageView
+                            android:id="@+id/emailImageView"
+                            style="@style/profileDetailsImage"
+                            android:src="@drawable/heart_rate_icon" />
+
+                        <TextView
+                            android:id="@+id/heartRateTextView"
+                            style="@style/profileDetailsTextMain"
+                            android:layout_toRightOf="@id/emailImageView"
+                            android:text="70" />
+
+                        <TextView
+                            style="@style/profileDetailsMiniText"
+                            android:layout_toRightOf="@id/emailImageView"
+                            android:text="bpm" />
+
+                        <ImageView
+                            android:id="@+id/measureHeartRateBtn"
+                            style="@style/profileDetailsImage"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/start_icon" />
+
+                        <ImageView
+                            android:id="@+id/pauseMeasureHeartRateBtn"
+                            style="@style/profileDetailsImage"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/pause_icon"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/measuringHeartRateIcon"
+                            style="@style/profileDetailsImage"
+                            android:layout_marginLeft="200sp"
+                            android:src="@drawable/heart_ic"
+                            android:visibility="invisible" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+
+                        >
+
+                        <Button
+                            android:id="@+id/logoutButton"
+                            style="@style/loginButton"
+                            android:layout_width="0dip"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/loginViewsMargin"
+                            android:layout_marginRight="20sp"
+                            android:layout_marginBottom="10sp"
+                            android:layout_weight=".5"
+                            android:text="Logout" />
+
+                        <Button
+                            android:id="@+id/setAlarmButton"
+                            style="@style/loginButton"
+                            android:layout_width="0dip"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/loginViewsMargin"
+                            android:layout_marginBottom="10sp"
+                            android:layout_weight=".5"
+                            android:text="Set alarm" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,11 @@
 package com.ahmed.hSafe.SmartContract;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.ahmed.hSafe.Utilities.InternalStorage;
+import com.ahmed.hSafe.entities.Creds;
 import com.ahmed.hSafe.entities.EthNetwork;
 import com.ahmed.hSafe.entities.HealthInfo;
 
@@ -108,7 +111,7 @@ public class WalletServices {
     }
 
 
-    static EHealth loadContract(String network, Credentials credentials, String contractAddress) {
+    public static EHealth loadContract(String network, Credentials credentials, String contractAddress) {
         if (web3js.isEmpty()) setWeb3js();
         EthNetwork net = web3js.get(network);
         assert net != null;
@@ -122,6 +125,22 @@ public class WalletServices {
         //write to contract
         TransactionReceipt transactionReceipt = eHealthContract.addHealthInfos(new Date().toString(), healthInfo.getHeartBeat(), healthInfo.getCalories(), healthInfo.getSteps()).send();
         Log.d("MThesisLog", "Transaction Hash : " + transactionReceipt.toString());
+    }
+
+    public static void addDoctor(EHealth eHealthContract, String doctorPublicAddress) throws Exception {
+        //write to contract
+        TransactionReceipt transactionReceipt = eHealthContract.addDoctor(doctorPublicAddress).send();
+        Log.d("MThesisLog", "Transaction Hash for adding doctor : " + transactionReceipt.toString());
+    }
+
+    public static Credentials loadCredentialsFromDevice(Context context) throws Exception {
+
+        Credentials credentials;
+        Creds creds = (Creds) InternalStorage.readObject(context, "Credentials");
+        credentials = creds.getCredentials();
+        Log.d("MThesisLog", "Credentials loaded from internal storage " + creds.getFilePath());
+
+        return credentials;
     }
 
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,35 +33,24 @@ public class HomeActivity extends AppCompatActivity {
     private AlarmManager manager;
 
 
-//    public interface Callback {
-//
-//        /**
-//         * Schedule javascript function execution represented by this {@link Callback} instance
-//         *
-//         * @param args arguments passed to javascript callback method via bridge
-//         */
-//        public void invoke(Object... args);
-//    }
-
-//    void helloThere(Callback callback){
-//        callback.invoke("Ahmed"," Chaari");
-//    }
 
     @Override
     protected void onCreate(Bundle bundle) {
 
         super.onCreate(bundle);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home_v2);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         getWalletFilePathFromDB();
 
-//        helloThere((s) -> {
-//            Log.d("Callback Test","Received from callback : "+s[0]+s[1]);
-//        });
-
         Button setAlarmBtn = findViewById(R.id.setAlarmButton);
         setAlarmBtn.setOnClickListener(this::startAlarm);
+
+        ImageView profileBtn = findViewById(R.id.profile_icon);
+        profileBtn.setOnClickListener(v -> {
+            Intent profileActivity = new Intent(HomeActivity.this, ProfileActivity.class);
+            startActivity(profileActivity);
+        });
 
         logoutBtn = findViewById(R.id.logoutButton);
         logoutBtn.setOnClickListener(v -> {
@@ -77,6 +67,7 @@ public class HomeActivity extends AppCompatActivity {
         assert manager != null;
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
         Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+        manager.cancel(pendingIntent);
     }
 
     public void retrieveActivity(String contractAddress) {

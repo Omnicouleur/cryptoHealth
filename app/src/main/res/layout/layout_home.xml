@@ -120,24 +120,27 @@
                     <Button
                         android:id="@+id/logoutButton"
                         style="@style/loginButton"
-                        android:layout_width="150dp"
+                        android:layout_width="120dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/loginViewsMargin"
                         android:layout_marginRight="20sp"
+                        android:layout_marginBottom="10sp"
                         android:text="Logout" />
 
                     <Button
                         android:id="@+id/setAlarmButton"
                         style="@style/loginButton"
-                        android:layout_width="150dp"
+                        android:layout_width="120dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/loginViewsMargin"
+                        android:layout_marginBottom="10sp"
                         android:text="Set alarm" />
 
                 </LinearLayout>
 
 
             </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.core.widget.NestedScrollView>

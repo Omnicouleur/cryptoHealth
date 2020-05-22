@@ -8,24 +8,22 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.ahmed.hSafe.entities.HealthInfo;
-
 import org.web3j.crypto.Credentials;
 
 import java.io.IOException;
-import java.util.concurrent.Future;
-public class WriteToContract extends AsyncTask<String, Void, EHealth> {
 
-    private HealthInfo healthInfo;
+public class AddDoctorToSC extends AsyncTask<String, Void, EHealth> {
+
+    public String doctorPublicAddress;
     private EHealth eHealthContract;
     private Credentials credentials;
     private String contractAddress;
     @SuppressLint("StaticFieldLeak")
     private Context context;
 
-    public WriteToContract(String contractAddress, HealthInfo healthInfo, Context context) {
+    public AddDoctorToSC(String contractAddress, String doctorPublicAddress, Context context) {
 
-        this.healthInfo = healthInfo;
+        this.doctorPublicAddress = doctorPublicAddress;
         this.contractAddress = contractAddress;
         this.context = context;
     }
@@ -33,6 +31,7 @@ public class WriteToContract extends AsyncTask<String, Void, EHealth> {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected EHealth doInBackground(String... strings) {
+
         try {
             credentials = WalletServices.loadCredentialsFromDevice(context);
         } catch (IOException e) {
@@ -62,27 +61,9 @@ public class WriteToContract extends AsyncTask<String, Void, EHealth> {
         eHealthContract = WalletServices.loadContract("ropsten", credentials, contractAddress);
 
         // Store a new healthInfo object in the Blockchain
-        WalletServices.addHealthInfos(eHealthContract, healthInfo);
+        WalletServices.addDoctor(eHealthContract, doctorPublicAddress);
 
-        //Read the health infos stored in the blockchain
-        readContract(eHealthContract);
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private String readContract(EHealth greeter) {
-
-        try {
-            Future<String> greeting = greeter.checkHealthInfos().sendAsync();
-            String convertToString = "";
-            convertToString += " || " +  greeting.get();
-            Log.d("MThesisLog", "Read from contract :" + convertToString);
-            return convertToString;
-        }
-        catch (Exception e){
-            Log.d("MThesisLog", "Exception read Contract :" + e.getMessage());
-        }
-
-        return "Error while reading";
     }
 
 }
