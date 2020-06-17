@@ -46,14 +46,15 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
-        Button profileButton = findViewById(R.id.profileButton);
 
-        profileButton.setOnClickListener(v -> {
-            //Intent intent = new Intent(LoginActivity.this, CreateEthAccountActivity.class);
-            //Intent intent = new Intent(LoginActivity.this, CreateOrRestoreActivity.class);
-            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-            startActivity(intent);
-        });
+//        Button profileButton = findViewById(R.id.profileButton);
+//
+//        profileButton.setOnClickListener(v -> {
+//            //Intent intent = new Intent(LoginActivity.this, CreateEthAccountActivity.class);
+//            //Intent intent = new Intent(LoginActivity.this, CreateOrRestoreActivity.class);
+//            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+//            startActivity(intent);
+//        });
         final EditText lMail = findViewById(R.id.loginMail);
         final EditText lpassword = findViewById(R.id.loginPassword);
         Button cirLoginButton = findViewById(R.id.cirLoginButton);

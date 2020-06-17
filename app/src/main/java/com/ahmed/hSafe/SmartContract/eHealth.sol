@@ -7,12 +7,17 @@ contract eHealth  {
     // Health info stores all the data retrieved from the smartband
     struct HealthInfo {
         string date;
-        string heartBeat;
         string steps;
         string calories;
+    }    
+    // Health info stores all the data retrieved from the smartband
+    struct HeartRateInfo {
+        string date;
+        string heartRate;
     }
-    // healthInfos stores the patients health data
-    HealthInfo[] healthInfos;
+    // stepsInfos stores the patients health data
+    HealthInfo[] stepsInfos;
+    HeartRateInfo[] heartRateInfos;
     enum Gender {male,female}
 
     mapping(address => bool) private doctors;
@@ -39,58 +44,81 @@ contract eHealth  {
     }
 
     /* Add new healthInfo of a certain patient */
-    function addHealthInfos(string memory _date,
-                            string memory _heartBeat,
+    function addStepsInfos(string memory _date,
                             string memory _steps,
                             string memory _calories) public {
         //require(patients[msg.sender]);
         HealthInfo memory healthInfo = HealthInfo({
                                     date : _date,
-                                    heartBeat : _heartBeat,
                                     steps : _steps,
                                     calories : _calories
                                    });
-        healthInfos.push(healthInfo);
+        stepsInfos.push(healthInfo);
+           }
+    /* Add new healthInfo of a certain patient */
+    function addHeartRate(string memory _date, string memory _heartRate) public {
+        //require(patients[msg.sender]);
+        HeartRateInfo memory heartRateInfo = HeartRateInfo({
+                                    date : _date,
+                                    heartRate : _heartRate
+                                   });
+        heartRateInfos.push(heartRateInfo);
            }
     /* check healthInfo of a certain patient  */
-    function checkHealthInfos() public view returns (string memory) {
+    function checkStepsInfos() public view returns (string memory) {
         string memory result = "Hello";
-        if (msg.sender == owner)  {result = getHealthInfosForPatient();}
-        else if (coachs[msg.sender]) {result = getHealthInfosForCoach() ;}
-        else if (doctors[msg.sender]) {result = getHealthInfosForDoctor();}
+        if (msg.sender == owner)  {result = getStepsInfosForPatient();}
+        else if (coachs[msg.sender]) {result = getStepsInfosForCoach() ;}
+        else if (doctors[msg.sender]) {result = getStepsInfosForDoctor();}
+        else {revert("Unauthorized access"); }
+        return result;
+    }
+        /* check healthInfo of a certain patient  */
+    function checkHeartRateInfos() public view returns (string memory) {
+        string memory result = "Hello";
+        if ((msg.sender == owner) || (doctors[msg.sender]))  {result = getHeartRateData();}
         else {revert("Unauthorized access"); }
         return result;
     }
     function getPatientName() public pure returns (string memory) {
         return "patients[msg.sender].name";
     }
-     function getHealthInfosForPatient() private view returns (string memory) {
+    
+    function getStepsInfosForPatient() private view returns (string memory) {
          string memory result = '';
-        uint arrayLength = healthInfos.length;
+        uint arrayLength = stepsInfos.length;
         for (uint i = 0; i<arrayLength; i++){
-        result = append(result,healthInfos[i].date,"|&|",healthInfos[i].heartBeat,"|&|");
-        result = append(result,healthInfos[i].steps,"|&|", 
-                        healthInfos[i].calories,"|#|");
+        result = append(result,stepsInfos[i].date,"|&|","","");
+        result = append(result,stepsInfos[i].steps,"|&|", 
+                        stepsInfos[i].calories,"|#|");
         }
         return result;
      } 
-    function getHealthInfosForDoctor() private view returns (string memory) {
-        string memory result = '';
-        uint arrayLength = healthInfos.length;
+    function getHeartRateData() private view returns (string memory) {
+         string memory result = '';
+        uint arrayLength = heartRateInfos.length;
         for (uint i = 0; i<arrayLength; i++){
-        result = append(result,healthInfos[i].date,"|&|",healthInfos[i].heartBeat,"|&|");
-        result = append(result,healthInfos[i].steps,"|&|", 
-                        healthInfos[i].calories,"|#|");
+        result = append(result,heartRateInfos[i].date,"|&|",heartRateInfos[i].heartRate,"|#|");
+        }
+        return result;
+     } 
+    function getStepsInfosForDoctor() private view returns (string memory) {
+        string memory result = '';
+        uint arrayLength = stepsInfos.length;
+        for (uint i = 0; i<arrayLength; i++){
+        result = append(result,stepsInfos[i].date,"|&|","","");
+        result = append(result,stepsInfos[i].steps,"|&|", 
+                        stepsInfos[i].calories,"|#|");
         }
         return result;
      }   
-    function getHealthInfosForCoach() private view returns (string memory) {
+    function getStepsInfosForCoach() private view returns (string memory) {
          string memory result = '';
-        uint arrayLength = healthInfos.length;
+        uint arrayLength = stepsInfos.length;
         for (uint i = 0; i<arrayLength; i++){
-        result = append(result,healthInfos[i].date,"|&|","","");
-        result = append(result,healthInfos[i].steps,"|&|", 
-                        healthInfos[i].calories,"|#|");
+        result = append(result,stepsInfos[i].date,"|&|","","");
+        result = append(result,stepsInfos[i].steps,"|&|", 
+                        stepsInfos[i].calories,"|#|");
         }
         return result;
      }   

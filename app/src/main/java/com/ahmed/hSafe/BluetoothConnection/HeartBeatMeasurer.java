@@ -124,5 +124,8 @@ public class HeartBeatMeasurer  {
         this.btGatt = bluetoothGatt;
     }
 
+    public boolean bleGattExist() {
+        return btGatt != null;
+    }
 
 }

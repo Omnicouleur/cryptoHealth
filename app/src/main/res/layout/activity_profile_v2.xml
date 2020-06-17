@@ -7,7 +7,6 @@
     android:background="@color/white"
     tools:context=".MainActivity">
 
-
     <FrameLayout
         android:id="@+id/header_container"
         android:layout_width="match_parent"
@@ -69,10 +68,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/user_name_text"
             android:layout_marginBottom="7dp"
             android:gravity="center"
             android:lineSpacingExtra="5sp"
-            android:text="Ahmed Chaari"
+            android:text="John Doe"
             android:textColor="#131314"
             android:textSize="23sp" />
 
@@ -95,6 +95,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/personal_information_tab"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
@@ -124,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:id="@+id/doctor_tab"
             android:orientation="vertical">
 
             <ImageView
@@ -151,6 +153,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:id="@+id/coach_tab"
             android:orientation="vertical">
 
             <ImageView
@@ -167,7 +170,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="1.5sp"
-                android:text="Coaches"
+                android:text="Coaches/Nutritionist"
                 android:textColor="#88888f"
                 android:textSize="11.5sp" />
 
@@ -192,14 +195,16 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="match_parent"
             android:layout_marginRight="30dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:id="@+id/personal_information_container"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
 
             <RelativeLayout style="@style/profileDetailsLayout">

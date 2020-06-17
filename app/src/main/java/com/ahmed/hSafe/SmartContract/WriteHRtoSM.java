@@ -8,24 +8,22 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.ahmed.hSafe.BluetoothConnection.Callback;
-
 import org.web3j.crypto.Credentials;
 
 import java.io.IOException;
 
-public class AddDoctorToSC extends AsyncTask<String, Void, EHealth> {
 
-    public String doctorPublicAddress;
+public class WriteHRtoSM extends AsyncTask<String, Void, EHealth> {
+
+    private String heartRate;
     private EHealth eHealthContract;
     private Credentials credentials;
     private String contractAddress;
     @SuppressLint("StaticFieldLeak")
     private Context context;
-    private Callback callback;
-    public AddDoctorToSC(String contractAddress, String doctorPublicAddress, Context context) {
 
-        this.doctorPublicAddress = doctorPublicAddress;
+    public WriteHRtoSM(String contractAddress, String heartRate, Context context) {
+        this.heartRate = heartRate;
         this.contractAddress = contractAddress;
         this.context = context;
     }
@@ -33,7 +31,6 @@ public class AddDoctorToSC extends AsyncTask<String, Void, EHealth> {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected EHealth doInBackground(String... strings) {
-
         try {
             credentials = WalletServices.loadCredentialsFromDevice(context);
         } catch (IOException e) {
@@ -46,7 +43,6 @@ public class AddDoctorToSC extends AsyncTask<String, Void, EHealth> {
             e.printStackTrace();
             Log.d("MThesisLog", "Error3 while reading object from IS " + e.getMessage());
         }
-
         try {
             writeToContract();
         } catch (Exception e) {
@@ -58,12 +54,8 @@ public class AddDoctorToSC extends AsyncTask<String, Void, EHealth> {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void writeToContract() throws Exception {
-
         //Load the deployed contract
         eHealthContract = WalletServices.loadContract("ropsten", credentials, contractAddress);
-
-        // Store a new healthInfo object in the Blockchain
-        WalletServices.addDoctor(eHealthContract, doctorPublicAddress);
+        WalletServices.addHeartRateInfo(eHealthContract, heartRate);
     }
-
 }

@@ -215,9 +215,9 @@ public class GattCallbackHandler extends BluetoothGattCallback {
                 long decimalstep = Long.parseLong(steps, 16);
                 long decimalCalories = Long.parseLong(calories, 16);
                 long decimalDistance = Long.parseLong(distance, 16);
-
-                callback.invoke(null, decimalstep, decimalDistance, decimalCalories);
-                Log.d("MThesisLog", "STEPS = " + decimalstep + " || Calories = " + decimalCalories + " || Distance = " + decimalDistance);
+                double dd = (double) decimalDistance / 1000;
+                callback.invoke(null, decimalstep, dd, decimalCalories);
+                Log.d("MThesisLog", "STEPS = " + decimalstep + " || Calories = " + decimalCalories + " || Distance = " + decimalDistance + "||" + dd);
                 gatt.readCharacteristic(batteryChar);
                 break;
             }

@@ -6,16 +6,35 @@ public class Doctor {
     private String specialty;
     private String city;
     private String publicAddress;
+    private String job;
+    private String gender;
 
-    public Doctor(String name, String specialty, String city, String publicAddress, String uid) {
+    public Doctor(String name, String uid, String specialty, String city, String publicAddress, String job, String gender) {
         this.name = name;
+        this.uid = uid;
         this.specialty = specialty;
         this.city = city;
         this.publicAddress = publicAddress;
-        this.uid = uid;
+        this.job = job;
+        this.gender = gender;
+    }
+    public Doctor() {
     }
 
-    public Doctor() {
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getUid() {

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,9 +52,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 //        holder.ps_image.setImageResource(model.getCity());
         holder.doctorName.setText(model.getName());
         holder.doctorSpec.setText(model.getSpecialty());
+        if (model.getJob().equals("doctor")) {
+            holder.avatar.setImageResource(R.drawable.doctor_icon);
+        } else {
+            holder.avatar.setImageResource(R.drawable.coach_icon);
+        }
         holder.addDoctorBtn.setOnClickListener(v -> {
+            Toast.makeText(context, "Adding " + model.getJob() + " ...", Toast.LENGTH_SHORT).show();
             new AddDoctorToSC(contractAddress, model.getPublicAddress(), context).execute();
-
             //Store the doctor/patient Association in DB
             FirebaseUser user = mAuth.getCurrentUser();
 
@@ -76,13 +82,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         TextView doctorName;
         TextView doctorSpec;
         ImageView addDoctorBtn;
+        ImageView avatar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             doctorName = itemView.findViewById(R.id.doctor_item_name);
             doctorSpec = itemView.findViewById(R.id.doctor_item_spec);
             addDoctorBtn = itemView.findViewById(R.id.add_doctor_btn);
-
+            avatar = itemView.findViewById(R.id.staff_avatar);
         }
     }
 }

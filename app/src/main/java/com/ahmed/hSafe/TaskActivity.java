@@ -23,10 +23,11 @@ public class TaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         String contractAddress = intent.getStringExtra("contractAddress");
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home_v2);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.d("MThesisLog", "Starting task... ");
+
         HeartBeatMeasurer heartBeatMeasurer = new HeartBeatMeasurer(getApplicationContext());
         DeviceConnector deviceConnector = new DeviceConnector(getApplicationContext(), heartBeatMeasurer, args -> {
             Log.d("MThesisLog", "Steps : " + args[1] + " || Distance : " + args[2]);

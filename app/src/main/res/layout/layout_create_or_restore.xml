@@ -139,6 +139,45 @@
                 android:textColor="@color/whiteTextColor" />
 
 
+        </LinearLayout>        <!-- Create or restore ? UI -->
+        <LinearLayout
+            android:id="@+id/restored_successfuly_wallet_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:focusableInTouchMode="false"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:visibility="gone">
+
+
+            <TextView
+                style="@style/welcomeText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Wallet restored successffully ! "
+                android:textColor="@color/gradBlue" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20sp"
+                android:text="Welcome back !.\n Now you can keep on enjoying our application"
+                android:textAlignment="textStart"
+                android:textSize="19sp" />
+
+
+            <Button
+                android:id="@+id/restore_walle_enjoy_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20sp"
+                android:background="@drawable/centre_button"
+                android:text="Enjoy"
+                android:textColor="@color/whiteTextColor" />
+
+
         </LinearLayout>
 
 

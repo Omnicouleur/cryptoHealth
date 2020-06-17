@@ -68,6 +68,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     <Button
         android:id="@+id/profileButton"
         style="@style/loginButton"
+        android:visibility="gone"
         android:text="Profile"
         android:layout_gravity="right"
         android:layout_marginTop="@dimen/loginViewsMargin"/>

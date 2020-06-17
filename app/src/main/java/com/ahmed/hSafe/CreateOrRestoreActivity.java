@@ -31,10 +31,12 @@ public class CreateOrRestoreActivity extends AppCompatActivity {
     Button createNewWallet;
     Button goToRestoreUIBtn;
     Button restoreWalletBtn;
+    Button enjoy;
     EditText mnemonicEditText;
     EditText walletPasswordEditText;
     View restoreLayout;
     View createOrRestoreLayout;
+    View walletRestoredLayout;
     View loadingView;
 
     FirebaseAuth mAuth;
@@ -54,8 +56,10 @@ public class CreateOrRestoreActivity extends AppCompatActivity {
         mnemonicEditText = findViewById(R.id.wallet_mnemonic_editText);
         walletPasswordEditText = findViewById(R.id.wallet_password_editText);
         createOrRestoreLayout = findViewById(R.id.restore_or_create_layout);
+        walletRestoredLayout = findViewById(R.id.restored_successfuly_wallet_layout);
         restoreLayout = findViewById(R.id.restore_wallet_layout);
         loadingView = findViewById(R.id.loading_spinner);
+        enjoy = findViewById(R.id.restore_walle_enjoy_btn);
 
         createNewWallet.setOnClickListener(v -> {
             Intent createWallet = new Intent(CreateOrRestoreActivity.this, CreateEthAccountActivity.class);
@@ -72,15 +76,22 @@ public class CreateOrRestoreActivity extends AppCompatActivity {
         restoreWalletBtn.setOnClickListener(v -> {
             String mnemonic = mnemonicEditText.getText().toString();
             String password = walletPasswordEditText.getText().toString();
+            restoreLayout.setVisibility(View.GONE);
+            loadingView.setVisibility(View.VISIBLE);
             try {
                 Bip39Wallet bip39Wallet = WalletServices.restoreBipWallet(password, mnemonic);
                 String path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath() + "/" + bip39Wallet.getFilename();
                 storePathInDB(path);
-
+                loadingView.setVisibility(View.GONE);
+                walletRestoredLayout.setVisibility(View.VISIBLE);
             } catch (Exception e) {
                 Log.d("MThesisLog", "Error while restoring wallet : " + e.toString());
                 e.printStackTrace();
             }
+        });
+        enjoy.setOnClickListener(v -> {
+            Intent home = new Intent(CreateOrRestoreActivity.this, HomeActivity.class);
+            startActivity(home);
         });
     }
 

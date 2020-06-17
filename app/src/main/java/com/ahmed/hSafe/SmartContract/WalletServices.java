@@ -93,7 +93,7 @@ public class WalletServices {
         assert net != null;
         TransactionReceipt transferReceipt = Transfer.sendFunds(net.web3Instance, net.adminCreds,
                 toAdress,  // you can put any address here
-                BigDecimal.valueOf(25), Convert.Unit.FINNEY)
+                BigDecimal.valueOf(45), Convert.Unit.FINNEY)
                 .send();
         return transferReceipt.getTransactionHash();
     }
@@ -121,10 +121,17 @@ public class WalletServices {
         return eHealthContract;
     }
 
-    static void addHealthInfos(EHealth eHealthContract, HealthInfo healthInfo) throws Exception {
+    static void addStepsInfo(EHealth eHealthContract, HealthInfo healthInfo) throws Exception {
         //write to contract
-        TransactionReceipt transactionReceipt = eHealthContract.addHealthInfos(new Date().toString(), healthInfo.getHeartBeat(), healthInfo.getCalories(), healthInfo.getSteps()).send();
-        Log.d("MThesisLog", "Transaction Hash : " + transactionReceipt.toString());
+        TransactionReceipt transactionReceipt = eHealthContract.addStepsInfos(new Date().toString(), healthInfo.getCalories(), healthInfo.getSteps()).send();
+        Log.d("MThesisLog", "Add Steps infos : Transaction Hash : " + transactionReceipt.toString());
+    }
+
+    static void addHeartRateInfo(EHealth eHealthContract, String heartRate) throws Exception {
+        if (Integer.parseInt(heartRate) < 1) return;
+        //write to contract
+        TransactionReceipt transactionReceipt = eHealthContract.addHeartRate(new Date().toString(), heartRate).send();
+        Log.d("MThesisLog", "Add heart Rate : Transaction Hash : " + transactionReceipt.toString());
     }
 
     public static void addDoctor(EHealth eHealthContract, String doctorPublicAddress) throws Exception {
