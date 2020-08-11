@@ -76,6 +76,7 @@
             android:textColor="#131314"
             android:textSize="23sp" />
 
+
     </LinearLayout>
 
 
@@ -227,7 +228,7 @@
 
                     <TextView
                         style="@style/profileDetailsMiniText"
-                        android:text="25" />
+                        android:text="31" />
                 </LinearLayout>
 
 
@@ -254,7 +255,7 @@
 
                     <TextView
                         style="@style/profileDetailsMiniText"
-                        android:text="ahmad.chaari@gmail.com" />
+                        android:text="alicia.johnson@gmail.com" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -277,7 +278,7 @@
 
                     <TextView
                         style="@style/profileDetailsMiniText"
-                        android:text="Sfax" />
+                        android:text="California" />
                 </LinearLayout>
 
 

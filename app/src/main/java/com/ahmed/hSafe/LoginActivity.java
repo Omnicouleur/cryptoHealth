@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
         return file.exists();
     }
     public void goToHomeActivity(){
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);//TODO Change this to GattMainActivity
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(intent);
     }
 }
