@@ -20,9 +20,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.ahmed.hSafe.SmartContract.DeploySmartContractTask;
+import com.ahmed.hSafe.Services.DeploySmartContractTask;
+import com.ahmed.hSafe.Services.InitializeEthAccountTask;
 import com.ahmed.hSafe.SmartContract.EHealth;
-import com.ahmed.hSafe.SmartContract.InitializeEthAccountTask;
 
 public class CreateEthAccountActivity extends AppCompatActivity {
 
@@ -117,7 +117,7 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
             walletPassword = walletPasswordEditText.getText().toString();
             new InitializeEthAccountTask(getApplicationContext()).execute(walletPassword, "ropsten");
         } else {
-            Log.d("MThesisLog", "Permission denied to use mobile storage");
+            Log.d("CryptoHealthLog", "Permission denied to use mobile storage");
             Toast.makeText(CreateEthAccountActivity.this, "Permission to use internal storage needed",
                     Toast.LENGTH_LONG).show();
         }
@@ -162,7 +162,7 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
 
     /*
      * Change View To Contrat Deployed Succesfully
-     * 'Enjoy' button opens the Home Activity (GattMainActivity)
+     * 'Enjoy' button opens the Home Activity
      * */
     public  void goToDeployedContractView(){
         loadingView.setVisibility(View.GONE);
@@ -171,7 +171,7 @@ web3j solidity generate -b eHealth.bin -a eHealth.abi -o . -p com.ahmed.hSafe
     }
 
     public void goToHomeActivity(){
-        Intent intent = new Intent(CreateEthAccountActivity.this, HomeActivity.class);//TODO Change this to GattMainActivity
+        Intent intent = new Intent(CreateEthAccountActivity.this, HomeActivity.class);
         startActivity(intent);
     }
 

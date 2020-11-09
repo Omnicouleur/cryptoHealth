@@ -30,7 +30,6 @@ import static android.content.Context.BLUETOOTH_SERVICE;
 public class DeviceConnector {
 
     private final HeartBeatMeasurer heartBeatMeasurer;
-    private final InfoReceiver infoReceiver;
     // Bluetooth variable section
     private BluetoothGatt bluetoothGatt;
     private BluetoothAdapter bluetoothAdapter;
@@ -42,7 +41,6 @@ public class DeviceConnector {
     public DeviceConnector(Context context, HeartBeatMeasurer heartBeatMeasurer, Callback callback) {
 
         mainContext = context;
-        infoReceiver = new InfoReceiver();
         this.heartBeatMeasurer = heartBeatMeasurer;
         //heartBeatMeasurer = new HeartBeatMeasurer(context);
         gattCallback = new GattCallbackHandler(context, heartBeatMeasurer, callback);
@@ -60,13 +58,6 @@ public class DeviceConnector {
         bluetoothAdapter = ((BluetoothManager) Objects.requireNonNull(mainContext
                 .getSystemService(BLUETOOTH_SERVICE)))
                 .getAdapter();
-
-//        searchProgressDialog = new ProgressDialog(mainContext);
-//        searchProgressDialog.setIndeterminate(true);
-//        searchProgressDialog.setTitle("MiBand Bluetooth Scanner");
-//        searchProgressDialog.setMessage("Searching...");
-//        searchProgressDialog.setCancelable(false);
-//        searchProgressDialog.show();
 
         if (!bluetoothAdapter.isEnabled()) {
             ((AppCompatActivity) mainContext)
@@ -95,13 +86,10 @@ public class DeviceConnector {
         //bluetoothDevice.createBond();
         bluetoothDevice.createBond();
         bluetoothGatt = bluetoothDevice.connectGatt(mainContext, true, gattCallback);
-
-
         if (bluetoothGatt.getDevice().getBondState() == BluetoothDevice.BOND_BONDED) {
-            Log.d("MThesisLog", "Bonded");
+            Log.d("CryptoHealthLog", "Bonded");
         }
         heartBeatMeasurer.updateBluetoothConfig(bluetoothGatt);
-        getDeviceBondLevel(successCallback);
 
     }
 
@@ -110,20 +98,6 @@ public class DeviceConnector {
         bluetoothGatt = null;
         bluetoothDevice = null;
         bluetoothAdapter = null;
-        getDeviceBondLevel(successCallback);
-    }
-
-    /**
-     * Returns a bluetooth bound level of connection between miband device and android app.
-     * Used by react UI part when connection has been established.
-     *
-     * @param successCallback - a Callback instance that will be needed in the end of discovering
-     *                        process to send back a result of work.
-     */
-    private void getDeviceBondLevel(Callback successCallback) {
-//        if (bluetoothGatt != null) {
-//            successCallback.invoke(null, bluetoothGatt.getDevice().getBondState());
-//        }
     }
 
     void setBluetoothDevice(BluetoothDevice bluetoothDevice) {

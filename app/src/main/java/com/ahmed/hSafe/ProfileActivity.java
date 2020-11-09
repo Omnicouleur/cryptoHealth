@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,8 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_v2);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
 
         userNameText = findViewById(R.id.user_name_text);
         recyclerViewContainer = findViewById(R.id.recyclerview);
@@ -107,10 +105,6 @@ public class ProfileActivity extends AppCompatActivity {
             personalInfoContainer.setVisibility(View.GONE);
         });
 
-        //coachIc.setColorFilter(orange);
-//        doctorIc.setColorFilter(orange);
-//        doctorText.setTextColor(orange);
-        //coachText.setTextColor(orange);
 
         recyclerview = findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ProfileActivity.this, LinearLayoutManager.VERTICAL, false);
@@ -118,23 +112,6 @@ public class ProfileActivity extends AppCompatActivity {
         recyclerview.setItemAnimator(new DefaultItemAnimator());
 
         getUserInfoFromDB();
-//        for (int i = 0; i < 1; i++) {
-////            Doctor model = new Doctor("Samir Chaari","Cardiologist","SFAX");
-////            list.add(model);
-////            model = new Doctor("Hamdi Guermazi","Radiologist","SFAX");
-////            list.add(model);
-////            model = new Doctor("Hela Kallel","Neurologist","SFAX");
-////            list.add(model);
-//            String pbAdress = "0x352b5e6c184dC9665D4aD1Fd2071197a01e49bA8";
-//            Doctor model = new Doctor("Walid Hbaieb", "Weight Management", "SFAX", pbAdress, "1");
-//            list.add(model);
-//            model = new Doctor("Melek Kammoun", "Athletics/Sports", "SFAX", pbAdress, "2");
-//            list.add(model);
-//            model = new Doctor("Karim Karray", "Mind-Body Fitness", "SFAX", pbAdress, "3");
-//            list.add(model);
-//            model = new Doctor("Zeineb Elleuch", "Management and Recovery", "SFAX", pbAdress, "4");
-//            list.add(model);
-//        }
 
     }
 
@@ -147,7 +124,6 @@ public class ProfileActivity extends AppCompatActivity {
                 doctors = (ArrayList<Doctor>) doctors.stream().filter(doctor -> doctor.getJob().equals(job)).collect(Collectors.toList());
 
                 RecyclerAdapter adapter;
-                //String contractAddress = "0x06905967cA0C1f11C8aDb1FF17Cc7CD51DD29869";
                 adapter = new RecyclerAdapter(ProfileActivity.this, doctors, args1[1].toString());
                 recyclerview.setAdapter(adapter);
             });
@@ -200,7 +176,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 CryptoAccount cryptoAccount = dataSnapshot.getValue(CryptoAccount.class);
                 if (cryptoAccount != null) {
-                    Log.d("MThesisLog", "Account :  contract @ from DB : " + cryptoAccount.contractAddress);
+                    Log.d("CryptoHealthLog", "Account :  contract @ from DB : " + cryptoAccount.contractAddress);
                     callback.invoke(null, cryptoAccount.contractAddress);
                 }
 

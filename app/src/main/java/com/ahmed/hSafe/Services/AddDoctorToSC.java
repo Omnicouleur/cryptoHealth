@@ -1,4 +1,4 @@
-package com.ahmed.hSafe.SmartContract;
+package com.ahmed.hSafe.Services;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,10 +9,9 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.ahmed.hSafe.BluetoothConnection.Callback;
+import com.ahmed.hSafe.SmartContract.EHealth;
 
 import org.web3j.crypto.Credentials;
-
-import java.io.IOException;
 
 public class AddDoctorToSC extends AsyncTask<String, Void, EHealth> {
 
@@ -34,35 +33,24 @@ public class AddDoctorToSC extends AsyncTask<String, Void, EHealth> {
     @Override
     protected EHealth doInBackground(String... strings) {
 
-        try {
-            credentials = WalletServices.loadCredentialsFromDevice(context);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d("MThesisLog", "Error1 while reading object from IS " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            Log.d("MThesisLog", "Error2 while reading object from IS " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d("MThesisLog", "Error3 while reading object from IS " + e.getMessage());
-        }
+        credentials = WalletServices.loadCredentialsFromDevice(context);
 
         try {
-            writeToContract();
+            addDoctor();
         } catch (Exception e) {
-            Log.d("MThesisLog", "Error while writing to contract : " + e.toString());
+            Log.d("CryptoHealthLog", "Error while adding doctor to contract : " + e.toString());
             e.printStackTrace();
         }
         return null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void writeToContract() throws Exception {
+    private void addDoctor() throws Exception {
 
         //Load the deployed contract
         eHealthContract = WalletServices.loadContract("ropsten", credentials, contractAddress);
 
-        // Store a new healthInfo object in the Blockchain
+        // Save doctor in the smart contract
         WalletServices.addDoctor(eHealthContract, doctorPublicAddress);
     }
 

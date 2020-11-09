@@ -11,7 +11,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.ahmed.hSafe.entities.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,8 +36,7 @@ public class EnquiryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_enquiry);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
-        Toolbar toolbar =  findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
         AutoCompleteTextView autoCompleteTextView = findViewById(R.id.act1);
         autoCompleteTextView.setThreshold(1);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, cities);
@@ -53,23 +51,23 @@ public class EnquiryActivity extends AppCompatActivity {
         btnSend.setOnClickListener(v -> {
 
             String city = autoCompleteTextView.getText().toString();
-            Log.d("MThesisLog", "City : " + city);
+            Log.d("CryptoHealthLog", "City : " + city);
             int selectedId = radioGroup.getCheckedRadioButtonId();
 
             // find the radiobutton by returned id
             radioButton =  findViewById(selectedId);
             String gender = radioButton.getText().toString();
-            Log.d("MThesisLog", "Gender : " + gender);
+            Log.d("CryptoHealthLog", "Gender : " + gender);
 
             int age = Integer.parseInt(editTextAge.getText().toString());
-            Log.d("MThesisLog", "Age : " + age);
+            Log.d("CryptoHealthLog", "Age : " + age);
 
             String fullName = editTextFullName.getText().toString();
-            Log.d("MThesisLog", "FullName : " + fullName);
+            Log.d("CryptoHealthLog", "FullName : " + fullName);
 
             FirebaseUser user = mAuth.getCurrentUser();
             assert user != null;
-            Log.d("MThesisLog", "user : " + user.getDisplayName() + user.getEmail());
+            Log.d("CryptoHealthLog", "user : " + user.getDisplayName() + user.getEmail());
             User userInfo = new User(fullName, gender, age, city);
             //User mohamed = new User("Mohamed Trabelsi","Male",29,"Pensylvania");
             mDatabase.child("users").child(user.getUid()).setValue(userInfo).addOnCompleteListener(this, task -> {

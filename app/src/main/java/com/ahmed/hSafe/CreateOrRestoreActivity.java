@@ -12,7 +12,7 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.ahmed.hSafe.SmartContract.WalletServices;
+import com.ahmed.hSafe.Services.WalletServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -85,7 +85,7 @@ public class CreateOrRestoreActivity extends AppCompatActivity {
                 loadingView.setVisibility(View.GONE);
                 walletRestoredLayout.setVisibility(View.VISIBLE);
             } catch (Exception e) {
-                Log.d("MThesisLog", "Error while restoring wallet : " + e.toString());
+                Log.d("CryptoHealthLog", "Error while restoring wallet : " + e.toString());
                 e.printStackTrace();
             }
         });
@@ -109,11 +109,11 @@ public class CreateOrRestoreActivity extends AppCompatActivity {
         if (user != null) {
             mDatabase.child("cryptoAccounts").child(user.getUid()).updateChildren(pathUpdate).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Log.d("MThesisLog", "Path updated ");
+                    Log.d("CryptoHealthLog", "Path updated ");
                 }
             });
         } else {
-            Log.d("MThesisLog", "Error in storing cyptoAccount in DB since no user is logged in, user is ");
+            Log.d("CryptoHealthLog", "Error in storing cyptoAccount in DB since no user is logged in, user is ");
         }
     }
 }

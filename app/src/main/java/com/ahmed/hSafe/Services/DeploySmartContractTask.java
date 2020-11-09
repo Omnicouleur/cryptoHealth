@@ -1,4 +1,4 @@
-package com.ahmed.hSafe.SmartContract;
+package com.ahmed.hSafe.Services;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ahmed.hSafe.SmartContract.EHealth;
 import com.ahmed.hSafe.entities.CryptoAccount;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,28 +36,28 @@ public class DeploySmartContractTask extends AsyncTask<String, Void, EHealth> {
 
 
     protected EHealth doInBackground(String... urls) {
-        // setting up firebase
+
         walletPassword = urls[0];
         filePath = urls[1];
         network = urls[2];
         try {
             walletCredentials = WalletServices.loadCredentials(walletPassword, filePath);
         } catch (Exception e) {
-            Log.d("MThesisLog", "Error while loading credentials : " + e.toString());
+            Log.d("CryptoHealthLog", "Error while loading credentials : " + e.toString());
             e.printStackTrace();
         }
 
-        Log.d("MThesisLog", "Password is : " + walletPassword);
+        // Setting up firebase
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
         // Deploy the contract
         try {
             eHealthContract = WalletServices.deployContract(walletCredentials, network);
-            Log.d("MThesisLog", network + " : Contract deployed at " + eHealthContract.getContractAddress());
+            Log.d("CryptoHealthLog", network + " : Contract deployed successfully at " + eHealthContract.getContractAddress());
             storeDataInDB();
         } catch (Exception e) {
-            Log.d("MThesisLog", "Error while deploying contract : " + e.getMessage() + " || " + e.toString());
+            Log.d("CryptoHealthLog", "Error while deploying contract : " + e.getMessage() + " || " + e.toString());
             e.printStackTrace();
         }
         return eHealthContract;
@@ -65,8 +66,8 @@ public class DeploySmartContractTask extends AsyncTask<String, Void, EHealth> {
     protected void onPostExecute(EHealth feed) {
     }
 
+    // Store user's address + wallet filepath in DB
     private void storeDataInDB() {
-        // Store user's address + wallet file path in DB
         FirebaseUser user = mAuth.getCurrentUser();
         CryptoAccount cryptoAccount = new CryptoAccount(walletCredentials.getAddress(), filePath, eHealthContract.getContractAddress());
         if (user != null) {
@@ -78,7 +79,7 @@ public class DeploySmartContractTask extends AsyncTask<String, Void, EHealth> {
                 }
             });
         } else {
-            Log.d("MThesisLog", "Error in storing cyptoAccount in DB since no user is logged in, user is ");
+            Log.d("CryptoHealthLog", "Error in storing cyptoAccount in DB since no user is logged in");
         }
 
     }

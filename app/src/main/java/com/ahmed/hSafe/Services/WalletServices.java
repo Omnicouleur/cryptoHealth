@@ -1,9 +1,10 @@
-package com.ahmed.hSafe.SmartContract;
+package com.ahmed.hSafe.Services;
 
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.ahmed.hSafe.SmartContract.EHealth;
 import com.ahmed.hSafe.Utilities.InternalStorage;
 import com.ahmed.hSafe.entities.Creds;
 import com.ahmed.hSafe.entities.EthNetwork;
@@ -25,6 +26,7 @@ import org.web3j.tx.gas.StaticGasProvider;
 import org.web3j.utils.Convert;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -66,23 +68,22 @@ public class WalletServices {
 
     public static Credentials loadCredentials(String password, String path) throws Exception {
         Credentials credentials = WalletUtils.loadCredentials(password, path);
-        Log.d("MThesisLog", "Credentials loaded, Private KEY : " + credentials.getEcKeyPair().getPrivateKey().toString(16));
-        Log.d("MThesisLog", "Public Address : " + credentials.getAddress());
-
+        Log.d("CryptoHealthLog", "Credentials loaded, Private KEY : " + credentials.getEcKeyPair().getPrivateKey().toString(16));
+        Log.d("CryptoHealthLog", "Public Address : " + credentials.getAddress());
         return credentials;
     }
 
     static Bip39Wallet createBipWallet(String password) throws Exception {
         String path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath();
         Bip39Wallet bip39Wallet = WalletUtils.generateBip39Wallet(password, new File(path));
-        Log.d("MThesisLog", "Wallet created, Mnemonic : " + bip39Wallet.getMnemonic());
+        Log.d("CryptoHealthLog", "Wallet created, Mnemonic : " + bip39Wallet.getMnemonic());
         return bip39Wallet;
     }
 
     public static Bip39Wallet restoreBipWallet(String password, String mnemonic) throws Exception {
         String path = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath();
         Bip39Wallet bip39Wallet = WalletUtils.generateBip39WalletFromMnemonic(password, mnemonic, new File(path));
-        Log.d("MThesisLog", "Wallet resotred, Mnemonic : " + bip39Wallet.getMnemonic());
+        Log.d("CryptoHealthLog", "Wallet resotred, Mnemonic : " + bip39Wallet.getMnemonic());
         return bip39Wallet;
     }
 
@@ -104,9 +105,8 @@ public class WalletServices {
         assert net != null;
         TransactionManager transactionManager = new RawTransactionManager(
                 net.web3Instance, walletCredentials, net.chainId);
-        Log.d("MThesisLog", "Account's Address : " + walletCredentials.getAddress());
         EHealth contract = EHealth.deploy(net.web3Instance, transactionManager, contractGasProvider).send();
-        Log.d("MThesisLog", "Contract deployed successfuly \nContract's Address : " + contract.getContractAddress());
+        Log.d("CryptoHealthLog", "Contract deployed successfully \nContract's Address : " + contract.getContractAddress());
         return contract;
     }
 
@@ -116,7 +116,7 @@ public class WalletServices {
         EthNetwork net = web3js.get(network);
         assert net != null;
         EHealth eHealthContract = EHealth.load(contractAddress, net.web3Instance, credentials, contractGasProvider);
-        Log.d("MThesisLog", "Contract address :: " + eHealthContract.getContractAddress());
+        Log.d("CryptoHealthLog", "Contract Loaded successfully: address : " + eHealthContract.getContractAddress());
 
         return eHealthContract;
     }
@@ -124,30 +124,41 @@ public class WalletServices {
     static void addStepsInfo(EHealth eHealthContract, HealthInfo healthInfo) throws Exception {
         //write to contract
         TransactionReceipt transactionReceipt = eHealthContract.addStepsInfos(new Date().toString(), healthInfo.getCalories(), healthInfo.getSteps()).send();
-        Log.d("MThesisLog", "Add Steps infos : Transaction Hash : " + transactionReceipt.toString());
+        Log.d("CryptoHealthLog", "Health info successfully saved : Transaction Hash : " + transactionReceipt.toString());
     }
 
     static void addHeartRateInfo(EHealth eHealthContract, String heartRate) throws Exception {
         if (Integer.parseInt(heartRate) < 1) return;
         //write to contract
         TransactionReceipt transactionReceipt = eHealthContract.addHeartRate(new Date().toString(), heartRate).send();
-        Log.d("MThesisLog", "Add heart Rate : Transaction Hash : " + transactionReceipt.toString());
+        Log.d("CryptoHealthLog", "Heart Rate successfully saved : Transaction Hash : " + transactionReceipt.toString());
     }
 
     public static void addDoctor(EHealth eHealthContract, String doctorPublicAddress) throws Exception {
         //write to contract
         TransactionReceipt transactionReceipt = eHealthContract.addDoctor(doctorPublicAddress).send();
-        Log.d("MThesisLog", "Transaction Hash for adding doctor : " + transactionReceipt.toString());
+        Log.d("CryptoHealthLog", "Doctor successfully saved : Transaction Hash: " + transactionReceipt.toString());
     }
 
-    public static Credentials loadCredentialsFromDevice(Context context) throws Exception {
+    public static Credentials loadCredentialsFromDevice(Context context) {
 
-        Credentials credentials;
-        Creds creds = (Creds) InternalStorage.readObject(context, "Credentials");
-        credentials = creds.getCredentials();
-        Log.d("MThesisLog", "Credentials loaded from internal storage " + creds.getFilePath());
+        Credentials credentials = null;
+        Creds creds = null;
+        try {
+            creds = (Creds) InternalStorage.readObject(context, "Credentials");
+            credentials = creds.getCredentials();
+            Log.d("CryptoHealthLog", "Credentials loaded from internal storage " + creds.getFilePath());
+            return credentials;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return credentials;
+        }
 
-        return credentials;
     }
 
 }

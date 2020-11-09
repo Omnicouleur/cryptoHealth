@@ -18,7 +18,7 @@ public class DeviceScanCallback extends ScanCallback {
     public void onScanResult(int callbackType, ScanResult result) {
         String deviceName = result.getDevice().getName();
         if (deviceName != null && deviceName.equalsIgnoreCase("Mi Band 3")){
-            Log.d("MThesisLog", "Device found " + result.getDevice().getAddress() +
+            Log.d("CryptoHealthLog", "Device found " + result.getDevice().getAddress() +
                     " " + deviceName);
             deviceConnector.setBluetoothDevice(result.getDevice());
             deviceConnector.getBluetoothAdapter()

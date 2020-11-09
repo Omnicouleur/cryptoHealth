@@ -19,8 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ahmed.hSafe.BluetoothConnection.DeviceConnector;
 import com.ahmed.hSafe.BluetoothConnection.HeartBeatMeasurer;
-import com.ahmed.hSafe.SmartContract.WriteHRtoSM;
-import com.ahmed.hSafe.SmartContract.WriteToContract;
+import com.ahmed.hSafe.Services.WriteHRtoSM;
+import com.ahmed.hSafe.Services.WriteHealthInfoToContract;
 import com.ahmed.hSafe.entities.CryptoAccount;
 import com.ahmed.hSafe.entities.HealthInfo;
 import com.google.firebase.auth.FirebaseAuth;
@@ -104,13 +104,13 @@ public class HomeActivity extends AppCompatActivity {
 
     public void syncData(Boolean uploadToContract) {
 
-        Log.d("MThesisLog", "Syncing data with band ...");
+        Log.d("CryptoHealthLog", "Syncing data with band ...");
         DeviceConnector deviceConnector = new DeviceConnector(getApplicationContext(), heartBeatMeasurer, args -> {
             heartBeatMeasurer.updateHrChars();
-            Log.d("MThesisLog", "S : " + args[1] + "ll" + args[2] + "ll" + args[3]);
+            Log.d("CryptoHealthLog", "S : " + args[1] + "ll" + args[2] + "ll" + args[3]);
 
             heartBeatMeasurer.startHrCalculation(args1 -> {
-                Log.d("MThesisLog", "HR c : " + args1[1]);
+                Log.d("CryptoHealthLog", "HR c : " + args1[1]);
                 heartBeatMeasurer.stopHrCalculation();
                 HealthInfo healthInfo = new HealthInfo(new Date().toString(), args[3].toString(), args[1].toString(), args1[1].toString());
                 runOnUiThread(new Runnable() {
@@ -118,13 +118,13 @@ public class HomeActivity extends AppCompatActivity {
                     public void run() {
                         stepsTextView.setText(healthInfo.getSteps());
                         float prc = (float) Integer.parseInt(healthInfo.getSteps()) / 100;
-                        Log.d("MThesisLog", "Pourcentage : " + prc);
+                        Log.d("CryptoHealthLog", "Pourcentage : " + prc);
                         stepProgressView.setPercent(prc);
                         heartRateTextView.setText(healthInfo.getHeartBeat());
                         distanceTextView.setText(args[2].toString());
                         caloriesTextView.setText(healthInfo.getCalories());
                         if (uploadToContract)
-                            new WriteToContract(contractAddress, healthInfo, getApplicationContext()).execute();
+                            new WriteHealthInfoToContract(contractAddress, healthInfo, getApplicationContext()).execute();
                         heartBeatMeasurer.stopHrCalculation();
                     }
                 });
@@ -184,7 +184,7 @@ public class HomeActivity extends AppCompatActivity {
                 measuringHeartRateIcon.startAnimation(animation);
 
                 heartBeatMeasurer.startHrCalculation(args1 -> {
-                    Log.d("MThesisLog", "HR c : " + args1[1]);
+                    Log.d("CryptoHealthLog", "HR c : " + args1[1]);
                     heartBeatMeasurer.stopHrCalculation();
                     runOnUiThread(new Runnable() {
                         @Override
@@ -228,7 +228,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setLogoutBtnListener() {
         logoutBtn.setOnClickListener(v -> {
-            Log.d("MThesisLog", "Sign out");
+            Log.d("CryptoHealthLog", "Sign out");
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(intent);

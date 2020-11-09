@@ -37,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d("MThesisLog", "createUserWithEmail:success");
+                        Log.d("CryptoHealthLog", "createUserWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
                         Intent intent = new Intent(RegisterActivity.this, EnquiryActivity.class);
                         startActivity(intent);

@@ -83,11 +83,11 @@ public class GattCallbackHandler extends BluetoothGattCallback {
     public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
         switch (newState) {
             case BluetoothGatt.STATE_DISCONNECTED:
-                Log.d("MThesisLog", "Device disconnected");
+                Log.d("CryptoHealthLog", "Device disconnected");
                 break;
             case BluetoothGatt.STATE_CONNECTED: {
-                Log.d("MThesisLog", "Connected with device");
-                Log.d("MThesisLog", "Discovering services");
+                Log.d("CryptoHealthLog", "Connected with device");
+                Log.d("CryptoHealthLog", "Discovering services");
                 gatt.discoverServices();
             }
             break;
@@ -116,7 +116,7 @@ public class GattCallbackHandler extends BluetoothGattCallback {
                     case "[16, 3, 1]":{
                         Log.d("INFO", "Authentication has been passed successfully"); // 7
 
-                        heartBeatMeasurer.updateHrChars(gatt);
+                        heartBeatMeasurer.updateHrChars();
 
                         BluetoothGattService service1 = gatt.getService(UUID.fromString(SERVICE1));
                         BluetoothGattCharacteristic stepsChar = service1.getCharacteristic(UUID.fromString(CHAR_STEPS));
@@ -217,12 +217,12 @@ public class GattCallbackHandler extends BluetoothGattCallback {
                 long decimalDistance = Long.parseLong(distance, 16);
                 double dd = (double) decimalDistance / 1000;
                 callback.invoke(null, decimalstep, dd, decimalCalories);
-                Log.d("MThesisLog", "STEPS = " + decimalstep + " || Calories = " + decimalCalories + " || Distance = " + decimalDistance + "||" + dd);
+                Log.d("CryptoHealthLog", "STEPS = " + decimalstep + " || Calories = " + decimalCalories + " || Distance = " + decimalDistance + "||" + dd);
                 gatt.readCharacteristic(batteryChar);
                 break;
             }
             case CHAR_BATTERY: {
-                Log.d("MThesisLog", "BATTERY = " + value[1]);
+                Log.d("CryptoHealthLog", "BATTERY = " + value[1]);
 
             }
         }

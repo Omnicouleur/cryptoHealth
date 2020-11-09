@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmed.hSafe.R;
-import com.ahmed.hSafe.SmartContract.AddDoctorToSC;
+import com.ahmed.hSafe.Services.AddDoctorToSC;
 import com.ahmed.hSafe.entities.Doctor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

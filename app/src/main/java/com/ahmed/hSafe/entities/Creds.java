@@ -1,6 +1,6 @@
 package com.ahmed.hSafe.entities;
 
-import com.ahmed.hSafe.SmartContract.WalletServices;
+import com.ahmed.hSafe.Services.WalletServices;
 
 import org.web3j.crypto.Credentials;
 

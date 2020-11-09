@@ -52,21 +52,7 @@ public class HeartBeatMeasurer  {
 
     }
 
-    void updateHrChars(BluetoothGatt gatt) {
-        //this.btGatt = gatt;
-        service1 = btGatt.getService(UUID.fromString(SERVICE1));
-        heartService = btGatt.getService(UUID.fromString(SERVICE_HEART_RATE));
-
-        hrCtrlChar = heartService.getCharacteristic(UUID.fromString(CHAR_HEART_RATE_CONTROL));
-        hrMeasureChar = heartService.getCharacteristic(UUID.fromString(CHAR_HEART_RATE_MEASURE));
-        sensorChar = service1.getCharacteristic(UUID.fromString(CHAR_SENSOR));
-
-        btGatt.setCharacteristicNotification(hrCtrlChar, true);
-        btGatt.setCharacteristicNotification(hrMeasureChar, true);
-    }
-
     public void updateHrChars() {
-        //this.btGatt = gatt;
         service1 = btGatt.getService(UUID.fromString(SERVICE1));
         heartService = btGatt.getService(UUID.fromString(SERVICE_HEART_RATE));
 
@@ -87,11 +73,8 @@ public class HeartBeatMeasurer  {
         byte currentHrValue = characteristic.getValue()[1];
         heartRateValue = String.valueOf(currentHrValue);
         callback.invoke(null, heartRateValue);
-//        Intent intent = new Intent("heartRateReceiver");
-//        intent.putExtra("heartRate", heartRateValue);
-//        context.sendBroadcast(intent);
 
-        Log.d("MThesisLog", "(Handle) Heart Rate Value = " + heartRateValue);
+        Log.d("CryptoHealthLog", "(Handle) Heart Rate Value = " + heartRateValue);
     }
 
     /**
@@ -103,18 +86,10 @@ public class HeartBeatMeasurer  {
         btGatt.writeCharacteristic(sensorChar);
     }
 
-    void startHrCalculation() {
-        sensorChar.setValue(new byte[]{0x01, 0x03, 0x19});
-        btGatt.writeCharacteristic(sensorChar);
-    }
-
     public void stopHrCalculation() {
         hrCtrlChar.setValue(new byte[]{0x15, 0x01, 0x00});
         btGatt.writeCharacteristic(hrCtrlChar);
-        //Log.d("MThesisLog","hrCtrlChar: " + btGatt.writeCharacteristic(hrCtrlChar));
     }
-
-
 
     /**
      * Re-inits BluetoothGatt instance in case bluetooth connection was interrupted somehow.

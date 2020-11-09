@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Log.d("MThesisLog", "user exists, cool : " + currentUser.getEmail());
+            Log.d("CryptoHealthLog", "user exists, cool : " + currentUser.getEmail());
             goToHomeActivity();
         }
         setContentView(R.layout.activity_login);
@@ -47,19 +47,11 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-//        Button profileButton = findViewById(R.id.profileButton);
-//
-//        profileButton.setOnClickListener(v -> {
-//            //Intent intent = new Intent(LoginActivity.this, CreateEthAccountActivity.class);
-//            //Intent intent = new Intent(LoginActivity.this, CreateOrRestoreActivity.class);
-//            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-//            startActivity(intent);
-//        });
         final EditText lMail = findViewById(R.id.loginMail);
         final EditText lpassword = findViewById(R.id.loginPassword);
         Button cirLoginButton = findViewById(R.id.cirLoginButton);
         cirLoginButton.setOnClickListener(v -> {
-            Log.d("MThesisLog", lMail.getText().toString());
+            Log.d("CryptoHealthLog", lMail.getText().toString());
             signInUsers(lMail.getText().toString(), lpassword.getText().toString());
         });
     }
@@ -69,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d("MThesisLog", "signInWithEmail:success");
+                        Log.d("CryptoHealthLog", "signInWithEmail:success");
                         Toast.makeText(LoginActivity.this, "Authentication Successful.",
                                 Toast.LENGTH_SHORT).show();
                         currentUser = mAuth.getCurrentUser();
@@ -92,9 +84,9 @@ public class LoginActivity extends AppCompatActivity {
                 CryptoAccount cryptoAccount = dataSnapshot.getValue(CryptoAccount.class);
                 if (cryptoAccount != null) {
                     walletFilePath = cryptoAccount.walletFilePath;
-                    Log.d("MThesisLog", "Account : " + cryptoAccount.walletFilePath);
-                    Log.d("MThesisLog", "file exists ? " + isFilePresent(cryptoAccount.walletFilePath));
-                    Log.d("MThesisLog", "file exists ? " + isFilePresent(cryptoAccount.walletFilePath));
+                    Log.d("CryptoHealthLog", "Account : " + cryptoAccount.walletFilePath);
+                    Log.d("CryptoHealthLog", "file exists ? " + isFilePresent(cryptoAccount.walletFilePath));
+                    Log.d("CryptoHealthLog", "file exists ? " + isFilePresent(cryptoAccount.walletFilePath));
                     if (isFilePresent(cryptoAccount.walletFilePath)){
                         goToHomeActivity();
                         return;

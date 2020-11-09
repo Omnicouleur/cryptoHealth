@@ -30,10 +30,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:label="Register">
         </activity>
-        <activity
-            android:name="com.ahmed.hSafe.MainActivity"
-            android:label="Main">
-        </activity>
+
         <activity
             android:name="com.ahmed.hSafe.ProfileActivity"
             android:label="@string/title_activity_profile"
@@ -43,10 +40,6 @@
             android:name="com.ahmed.hSafe.TaskActivity"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.ProfileTheme" />
-        <activity
-            android:name="com.ahmed.hSafe.BluetoothConnection.GattMainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="Home" />
         <activity
             android:name="com.ahmed.hSafe.CreateEthAccountActivity"
             android:theme="@style/AppTheme.NoActionBar"

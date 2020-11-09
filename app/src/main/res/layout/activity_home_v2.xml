@@ -97,7 +97,7 @@
             android:layout_margin="10dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:context=".ProfileActivity"
-            tools:showIn="@layout/activity_home">
+            tools:showIn="@layout/activity_home_v2">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card"
