@@ -2,11 +2,11 @@
 This project was developed for my master's graduation project, it aims to leverage the  Blockchain technology to secure and protect medical information and records collected from patients.<br/>
 This Android application collects health information from a smart band (in our case a Xioami Mi Band 3) and stores it in smart contract deployed on an ethereum based blockchain (Ropsten/Rinkeby).
 ## Preview
-<center>
 ![cryptoHealth](https://media.giphy.com/media/TPI9chE122DC5GEACC/giphy.gif)
-</center>
-##How it works
-![cryptoHealthArchitecture](https://i.ibb.co/s9sq7v2/arch-m.png)<br/><br/><br/>
+  <br/><br/><br/>
+## How it works
+![cryptoHealthArchitecture](https://i.ibb.co/s9sq7v2/arch-m.png) 
+<br/><br/><br/>
 1- The user creates an account (email and password)<br/>
 2- A wallet will be created for the user and his smart contract will deployed to the network.<br/>
 3- The android application automatically scans and connects to nearby Xiaomi Mi 3 bands and sync data.<br/>
